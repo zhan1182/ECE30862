@@ -1,0 +1,18 @@
+make a field public and print directly
+print a private field directly
+make a method private and try to call
+in Student eliminate gpa field and replace getGPA with function that does math.
+
+in Student override getDOB and do DD/YY/YYYY
+        public String getDOB( ) {
+          String dob = super.getDOB( );
+          String month = dob.substring(0, 2);
+          String day = dob.substring(3, 5);
+          String year = dob.substring(6, 10);
+          return day+"/"+month+"/"+year;
+      }
+
+show polymorphism by assigning p1 = s1; System.out.println(p1.getDOB( );) prints out the DD/MM/YYYY version
+show limits of polymorphism by assigning as above and then doing p.1 System.out.println(p1.getGPA( ));
+
+After this show how function call is implemented at runtime
