@@ -8,6 +8,7 @@ import com.brackeen.javagamebook.graphics.Animation;
 public class Player extends Creature {
 
     private static final float JUMP_SPEED = -.95f;
+    public static int firerate = 4;
 
     private boolean onGround;
 
@@ -61,5 +62,6 @@ public class Player extends Creature {
     public float getMaxSpeed() {
         return 0.5f;
     }
+
 
 }

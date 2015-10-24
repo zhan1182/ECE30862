@@ -29,7 +29,8 @@ public class TileGameResourceManager extends ResourceManager {
     private Sprite goalSprite;
     private Sprite grubSprite;
     private Sprite flySprite;
-
+    private Sprite bullet1Sprite;
+    private Sprite bullet2Sprite;
     /**
         Creates a new ResourceManager with the specified
         GraphicsConfiguration.
@@ -45,6 +46,7 @@ public class TileGameResourceManager extends ResourceManager {
         loadTileImages();
         loadCreatureSprites();
         loadPowerUpSprites();
+        loadBulletSprites();
     }
 
 
@@ -156,7 +158,7 @@ public class TileGameResourceManager extends ResourceManager {
     }
 
 
-    private void addSprite(TileMap map,
+    public void addSprite(TileMap map,
         Sprite hostSprite, int tileX, int tileY)
     {
         if (hostSprite != null) {
@@ -252,6 +254,16 @@ public class TileGameResourceManager extends ResourceManager {
         grubSprite = new Grub(grubAnim[0], grubAnim[1],
             grubAnim[2], grubAnim[3]);
     }
+    
+    public void loadBulletSprites(){
+    	Image[] images = new Image[2];
+        images = new Image[] {
+                loadImage("Bullet1.png"),
+                loadImage("Bullet2.png"),
+            };
+        bullet1Sprite = new Bullet(createBulletAnim(images[0]));
+        bullet2Sprite = new Bullet(createBulletAnim(images[1]));
+    }
 
 
     private Animation createPlayerAnim(Image player1,
@@ -278,7 +290,11 @@ public class TileGameResourceManager extends ResourceManager {
         anim.addFrame(img2, 50);
         return anim;
     }
-
+    private Animation createBulletAnim(Image img){
+    	Animation anim = new Animation();
+    	anim.addFrame(img, 200);
+    	return anim;
+    }
 
     private Animation createGrubAnim(Image img1, Image img2) {
         Animation anim = new Animation();
@@ -313,5 +329,10 @@ public class TileGameResourceManager extends ResourceManager {
         anim.addFrame(loadImage("music2.png"), 150);
         musicSprite = new PowerUp.Music(anim);
     }
-
+    public Sprite getBullet1(){
+    	return bullet1Sprite;
+    }
+    public Sprite getBullet2(){
+    	return bullet2Sprite;
+    }
 }

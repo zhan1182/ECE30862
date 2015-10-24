@@ -48,7 +48,9 @@ public class TileMapRenderer {
         // use the floor function:
         //return (int)Math.floor((float)pixels / TILE_SIZE);
     }
-
+    public static int getTilesize(){
+    	return TILE_SIZE;
+    }
 
     /**
         Converts a tile position to a pixel position.

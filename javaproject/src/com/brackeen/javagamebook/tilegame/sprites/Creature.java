@@ -18,14 +18,23 @@ public abstract class Creature extends Sprite {
     public static final int STATE_NORMAL = 0;
     public static final int STATE_DYING = 1;
     public static final int STATE_DEAD = 2;
+    public static final int FSTATE_IDLE = 0;
+    public static final int FSTATE_FIRE = 1;
+    public static final int FSTATE_COMBO = 2;
+    public static final int FSTATE_WAIT = 3;
+    public static final int FSTATE_SHOOTEN = 4;
+    public static int firerate = 8;
 
     private Animation left;
     private Animation right;
     private Animation deadLeft;
     private Animation deadRight;
     private int state;
+    private int firestate;
+    private int timer;
     private long stateTime;
-
+    private boolean direction = true;
+    private int move = 0;
     /**
         Creates a new Creature with the specified Animations.
     */
@@ -38,6 +47,7 @@ public abstract class Creature extends Sprite {
         this.deadLeft = deadLeft;
         this.deadRight = deadRight;
         state = STATE_NORMAL;
+        firestate = FSTATE_WAIT;
     }
 
 
@@ -136,8 +146,33 @@ public abstract class Creature extends Sprite {
     public void collideVertical() {
         setVelocityY(0);
     }
-
-
+    public boolean getDirection(){
+    	return direction;
+    }
+    public int getFstate(){
+    	return firestate;
+    }
+    public int getTimer(){
+    	return timer;
+    }
+    public void setTimer(int timer){
+    	this.timer = timer;
+    }
+    public void setFstate(int fstate){
+    	firestate = fstate;
+    }
+    public int getFirerate(){
+    	return firerate;
+    }
+    public void resetMove(){
+    	move = 2;
+    }
+    public void setMove(){
+    	move -= 1;
+    }
+    public boolean canMove(){
+    	return move == 0;
+    }
     /**
         Updates the animaton for this creature.
     */
@@ -146,9 +181,11 @@ public abstract class Creature extends Sprite {
         Animation newAnim = anim;
         if (getVelocityX() < 0) {
             newAnim = left;
+            direction = false;
         }
         else if (getVelocityX() > 0) {
             newAnim = right;
+            direction = true;
         }
         if (state == STATE_DYING && newAnim == left) {
             newAnim = deadLeft;
@@ -156,7 +193,27 @@ public abstract class Creature extends Sprite {
         else if (state == STATE_DYING && newAnim == right) {
             newAnim = deadRight;
         }
-
+        if(firestate == FSTATE_FIRE){
+        	if(timer == 0){
+        		firestate = FSTATE_IDLE;
+        	}else{
+        		timer -= 1;
+        	}
+        }else if(firestate == FSTATE_COMBO){
+    		if(timer == 0){
+    			firestate = FSTATE_WAIT;
+    			timer = 200;
+    		}else{
+    			timer -= 1;
+    		}
+    	}else if(firestate == FSTATE_WAIT){
+    		System.out.println("WAIT"+timer);
+    		if(timer == 0){
+    			firestate = FSTATE_IDLE;
+    		}else{
+    			timer -= 1;
+    		}
+    	}
         // update the Animation
         if (anim != newAnim) {
             anim = newAnim;

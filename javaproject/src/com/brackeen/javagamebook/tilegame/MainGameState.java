@@ -19,13 +19,13 @@ public class MainGameState implements GameState {
 
     public static final float GRAVITY = 0.002f;
 
-
     private SoundManager soundManager;
     private MidiPlayer midiPlayer;
     private TileGameResourceManager resourceManager;
     private int width;
     private int height;
-
+    private int offsetX;
+    
     private Point pointCache = new Point();
     private Sound prizeSound;
     private Sound boopSound;
@@ -34,11 +34,14 @@ public class MainGameState implements GameState {
     private TileMapRenderer renderer;
 
     private String stateChange;
+    private boolean move = false;
 
     private GameAction moveLeft;
     private GameAction moveRight;
     private GameAction jump;
     private GameAction exit;
+    private GameAction shoot;//!!!Init Shoot Action
+
 
     public MainGameState(SoundManager soundManager,
         MidiPlayer midiPlayer, int width, int height)
@@ -53,7 +56,8 @@ public class MainGameState implements GameState {
             GameAction.DETECT_INITAL_PRESS_ONLY);
         exit = new GameAction("exit",
             GameAction.DETECT_INITAL_PRESS_ONLY);
-
+        shoot = new GameAction("shoot",
+                               GameAction.DETECT_INITAL_PRESS_ONLY);//!!!
         renderer = new TileMapRenderer();
         toggleDrumPlayback();
     }
@@ -91,7 +95,7 @@ public class MainGameState implements GameState {
         inputManager.mapToKey(jump, KeyEvent.VK_SPACE);
         inputManager.mapToKey(jump, KeyEvent.VK_UP);
         inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
-
+        inputManager.mapToKey(shoot, KeyEvent.VK_S);//!!!
         soundManager.setPaused(false);
         midiPlayer.setPaused(false);
         midiPlayer.play(music, true);
@@ -132,12 +136,24 @@ public class MainGameState implements GameState {
             float velocityX = 0;
             if (moveLeft.isPressed()) {
                 velocityX-=player.getMaxSpeed();
+                move = true;
             }
             if (moveRight.isPressed()) {
                 velocityX+=player.getMaxSpeed();
+                move = true;
             }
             if (jump.isPressed()) {
                 player.jump(false);
+            }
+            if(shoot.isPressed()){
+            	int currFstate = player.getFstate();
+            	if(currFstate == 0){
+            		player.setFstate(1);
+            		player.setTimer(player.getFirerate());
+            	}else if(currFstate == 1){
+            		player.setFstate(2);
+            		player.setTimer(player.getFirerate() * 10);
+            	}
             }
             player.setVelocityX(velocityX);
         }
@@ -254,13 +270,26 @@ public class MainGameState implements GameState {
 
         // get keyboard/mouse input
         checkInput(elapsedTime);
-
+        int currTimer = player.getTimer();
+        int fstate = player.getFstate();
+        if ((fstate == 1 || fstate == 2) && currTimer > 0 && (currTimer % player.getFirerate() == 0)){
+        	Bullet bullet1 = (Bullet)resourceManager.getBullet1().clone();
+        	bullet1.setX(player.getX());
+        	bullet1.setY(player.getY());
+        	bullet1.setTarget(0);
+        	if(player.getDirection()){
+        		bullet1.setVelocityX(bullet1.getSpeed1());
+        	}else{
+        		bullet1.setVelocityX(-bullet1.getSpeed1());
+        	}
+        	map.addSprite(bullet1);
+        }
         // update player
         updateCreature(player, elapsedTime);
         player.update(elapsedTime);
-
         // update other sprites
         Iterator i = map.getSprites();
+        Bullet bullet2 = null;
         while (i.hasNext()) {
             Sprite sprite = (Sprite)i.next();
             if (sprite instanceof Creature) {
@@ -268,12 +297,38 @@ public class MainGameState implements GameState {
                 if (creature.getState() == Creature.STATE_DEAD) {
                     i.remove();
                 }
-                else {
-                    updateCreature(creature, elapsedTime);
+
+                if(creature.getTimer() == 11 && creature.getVelocityX() != 0){
+                    boolean direction = player.getX() > creature.getX();
+                	bullet2 = (Bullet)resourceManager.getBullet2().clone();
+                	bullet2.setX(creature.getX());
+                	bullet2.setY(creature.getY());
+                	bullet2.setTarget(1);
+                	if(direction){
+                		bullet2.setVelocityX(bullet2.getSpeed2());
+                	}else{
+                		bullet2.setVelocityX(-bullet2.getSpeed2());
+                	}
+                }
+                updateCreature(creature, elapsedTime);
+            }
+            int mapWidth = TileMapRenderer.tilesToPixels(map.getWidth());
+            offsetX = width / 2 - Math.round(player.getX()) - TileMapRenderer.getTilesize();
+            offsetX = Math.min(offsetX, 0);
+            offsetX = Math.max(offsetX, width - mapWidth);
+            if (sprite instanceof Bullet){
+                Bullet bullet = (Bullet)sprite;
+                if(bullet.getState() == Bullet.STATE_DEAD || bullet.getX() <= -offsetX || bullet.getX() >= -offsetX + width){
+                	i.remove();
+                }else{
+                    updateBullet(bullet, elapsedTime);
                 }
             }
             // normal update
             sprite.update(elapsedTime);
+        }
+        if(bullet2 != null){
+        	map.addSprite(bullet2);
         }
     }
 
@@ -316,6 +371,24 @@ public class MainGameState implements GameState {
         }
         if (creature instanceof Player) {
             checkPlayerCollision((Player)creature, false);
+        }else if( creature.getX() >= -offsetX && creature.getX() < -offsetX + width){
+        	if(creature.getFstate() == 0){
+        		creature.setFstate(1);
+        		creature.setTimer(12);
+        	}else if(creature.getFstate() == 4){
+        		if(creature.canMove()){
+        			creature.setTimer(0);
+        			creature.setFstate(0);
+        		}else{
+        			creature.setFstate(3);
+        			creature.setTimer(30);
+        		}
+        	}
+        }else if(creature.getX() < -offsetX || creature.getX() > -offsetX + width){
+        	System.out.println("Out of screen");
+        	creature.setFstate(4);
+        	creature.setTimer(0);
+        	creature.resetMove();
         }
 
         // change y
@@ -345,7 +418,23 @@ public class MainGameState implements GameState {
         }
 
     }
-
+    private void updateBullet(Bullet bullet, long elapsedtime){
+        //Change x
+        float dx = bullet.getVelocityX();
+        float oldX = bullet.getX();
+        float newX = oldX + dx * elapsedtime;
+        bullet.setX(newX);
+        if(bullet.getTarget() == 0){
+        	Sprite collidesprite = getSpriteCollision(bullet);
+        	if (collidesprite instanceof Creature){
+        		Creature badguy = (Creature) collidesprite;
+        		soundManager.play(boopSound);
+        		badguy.setState(Creature.STATE_DYING);
+        		bullet.setState(Bullet.STATE_DEAD);
+        	}
+        }
+        
+    }
 
     /**
         Checks for Player collision with other Sprites. If
@@ -377,6 +466,12 @@ public class MainGameState implements GameState {
                 // player dies!
                 player.setState(Creature.STATE_DYING);
             }
+        }else if(collisionSprite instanceof Bullet){
+        	Bullet bullet = (Bullet) collisionSprite;
+        	if(bullet.getTarget() == 1){
+        		player.setState(Creature.STATE_DYING);
+        		bullet.setState(Bullet.STATE_DEAD);
+        	}
         }
     }
 
