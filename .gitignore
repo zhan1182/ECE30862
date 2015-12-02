@@ -85,3 +85,8 @@ pid_temp/
 #specific files
 .DS*
 __MACOSX*
+
+
+# Executables:
+*.out
+*.o
