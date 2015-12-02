@@ -2,9 +2,14 @@
 #include <stdlib.h>
 using namespace std;
 
-class Room{
-public:
-	Room();
-	~Room();
-	void print();
-};
+#include "room.hh"
+
+Room::Room()
+{
+
+}
+
+Room::~Room()
+{
+	
+}
