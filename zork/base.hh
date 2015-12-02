@@ -9,13 +9,14 @@ using namespace std;
 
 class Base
 {
-	string name;
-	string description;
-	int status;
 public:
-	Base();
-	~Base();
-	void print();
+	Base(string Name, string Description);
+	virtual ~Base();
+	virtual void print();
+protected:
+	const string name;
+	const string description;
+	string status;
 };
 
 
