@@ -3,8 +3,8 @@ using namespace std;
 
 #include "trigger.hh"
 
-Trigger::Trigger(Condition CDT, string Type):
-cdt(CDT), type(Type)
+Trigger::Trigger(Condition CDT, string Type, string Action, string ToString, string Command):
+cdt(CDT), type(Type), action(Action), toString(ToString), command(Command)
 {
 
 }
@@ -19,4 +19,7 @@ void Trigger::print()
 {
 	cout << "Object: " << cdt.getObject() << endl;
 	cout << "Status: " << cdt.getStatus() << endl;
+	cout << "Action: " << action << endl;
+	cout << "Print: " << toString << endl;
+	cout << "Command: " << command << endl;
 }

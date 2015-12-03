@@ -10,10 +10,13 @@
 
 class Trigger
 {
-	string type;
 	Condition cdt;
+	string type;
+	string action;
+	string toString;
+	string command;
 public:
-	Trigger(Condition CDT, string Type);
+	Trigger(Condition CDT, string Type, string Action, string ToString, string Command);
 	virtual ~Trigger();
 	virtual void print();
 };

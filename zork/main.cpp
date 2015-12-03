@@ -26,9 +26,12 @@ int main(int argc, char ** argv)
 	string has = "has";
 	string status = "status";
 	string type = "type";
+	string action = "action";
+	string toString = "toString";
+	string command = "n";
 
 	Condition cdt(object, owner, has, status);
-	Trigger trigger(cdt, type);
+	Trigger trigger(cdt, type, action, toString, command);
 
 	trigger.print();
 
