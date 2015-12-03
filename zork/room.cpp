@@ -2,7 +2,7 @@ using namespace std;
 
 #include "room.hh"
 
-Room::Room(string Name, string Description, string Type):Base(Name, Description), type(Type)
+Room::Room(string Name, string Description, string Status, string Type):Base(Name, Description, Status), type(Type)
 {
 }
 

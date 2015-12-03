@@ -10,7 +10,7 @@ using namespace std;
 class Base
 {
 public:
-	Base(string Name, string Description);
+	Base(string Name, string Description, string Status);
 	virtual ~Base();
 	virtual void print();
 protected:

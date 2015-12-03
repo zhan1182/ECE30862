@@ -5,9 +5,8 @@ using namespace std;
 #include "base.hh"
 
 
-Base::Base(string Name, string Description):name(Name), description(Description)
+Base::Base(string Name, string Description, string Status):name(Name), description(Description), status(Status)
 {
-	status = "";
 }
 
 Base::~Base()

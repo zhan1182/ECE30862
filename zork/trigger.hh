@@ -1,6 +1,6 @@
 
-#ifndef ROOM_H_
-#define ROOM_H_
+#ifndef TRIGGER_H_
+#define TRIGGER_H_
 
 #include <iostream>
 #include <stdlib.h>
