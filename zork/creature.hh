@@ -15,11 +15,13 @@ class Creature : public Base
 {
 	list<string> vul_list;
 	list<Trigger> trigger_list;
+	string attack;
 public:
-	Creature(string Name, string Description, string Writing, string ToString, string Action);
+	Creature(string Name, string Description, string Status, string Attack);
 	virtual ~Creature();
 	virtual void print();
 	void add_trigger(Trigger tg);
+	void add_vul(string vul);
 };
 
 #endif
