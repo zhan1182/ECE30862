@@ -2,7 +2,8 @@ using namespace std;
 
 #include "container.hh"
 
-Container::Container(string Name, string Description, string Status):Base(Name, Description, Status)
+Container::Container(string Name, string Description, string Status):
+Base(Name, Description, Status)
 {
 }
 

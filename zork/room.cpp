@@ -2,6 +2,8 @@ using namespace std;
 
 #include "room.hh"
 
+// #include "item.hh"
+
 Room::Room(string Name, string Description, string Status, string Type):Base(Name, Description, Status), type(Type)
 {
 }

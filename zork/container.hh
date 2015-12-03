@@ -18,7 +18,7 @@ class Container : public Base
 	list<Trigger> trigger_list;
 	list<string> accept_list;
 public:
-	Container(string Name, string Description, string Writing, string ToString, string Action);
+	Container(string Name, string Description, string Status);
 	virtual ~Container();
 	virtual void print();
 	void add_trigger(Trigger tg);

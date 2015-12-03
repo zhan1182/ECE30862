@@ -3,7 +3,8 @@ using namespace std;
 #include "item.hh"
 // #include "trigger.hh"
 
-Item::Item(string Name, string Description):Base(Name, Description), type(Type)
+Item::Item(string Name, string Description, string Status, string Writing, string ToString, string Action):
+Base(Name, Description, Status), writing(Writing), toString(ToString), action(Action)
 {
 }
 

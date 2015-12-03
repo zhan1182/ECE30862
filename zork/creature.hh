@@ -1,5 +1,5 @@
-#ifndef ITEM_H_
-#define ITEM_H_
+#ifndef CREATURE_H_
+#define CREATURE_H_
 
 #include <iostream>
 #include <stdlib.h>
@@ -11,15 +11,13 @@
 
 using namespace std;
 
-class Item : public Base
+class Creature : public Base
 {
+	list<string> vul_list;
 	list<Trigger> trigger_list;
-	string writing;
-	string toString;
-	string action;
 public:
-	Item(string Name, string Description, string Status, string Writing, string ToString, string Action);
-	virtual ~Item();
+	Creature(string Name, string Description, string Writing, string ToString, string Action);
+	virtual ~Creature();
 	virtual void print();
 	void add_trigger(Trigger tg);
 };
