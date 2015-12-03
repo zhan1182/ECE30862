@@ -1,36 +1,21 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string>
-
+#include "rapidxml/rapidxml.hpp"
 using namespace std;
 
 #include "base.hh"
 #include "room.hh"
-#include "condition.hh"
-#include "trigger.hh"
 
 int main(int argc, char ** argv)
 {
-	// string s1 = "base";
-	// string s2 = "test";
-
-	// Base b(s1, s2);
-	// Room r(s1, s2, "exit");
-
-	// b.print();
-
-	// r.print();
-
-	string object = "object";
-	string owner = "owner";
-	string has = "has";
-	string status = "status";
-	string type = "type";
-
-	Condition cdt(object, owner, has, status);
-	Trigger trigger(cdt, type);
-
-	trigger.print();
-
+    ifstream ifs(argv[1]);
+    string text((istreambuf_iterator<char>(ifs)),
+                    istreambuf_iterator<char>());
+    
+    //Use xml parser
+    xml_document<> doc;
+    doc.parse<0>(text_nc);
+    
 	return EXIT_SUCCESS;
 }
