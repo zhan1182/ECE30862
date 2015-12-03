@@ -3,8 +3,8 @@
 
 #include "turnon.hh"
 using namespace std;
-Turnon::Turnon(string tostring, string action):
-    tostring(tostring), action(action){
+Turnon::Turnon(string Tostring, string Action):
+    tostring(Tostring), action(Action){
 }
 Turnon::~Turnon(){
 }

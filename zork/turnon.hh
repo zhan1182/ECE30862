@@ -7,7 +7,7 @@ class Turnon{
     string tostring;
     string action;
 public:
-    Turnon(string tostring, string action);
+    Turnon(string Tostring, string Action);
     virtual ~Turnon();
     virtual void print();
 };
