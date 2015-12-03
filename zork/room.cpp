@@ -27,3 +27,10 @@ void Room::add_item(Item im){
 void Room::add_border(Border br){
 	border_list.push_back(br);
 }
+
+void Room::add_container(Container cont){
+	container_list.push_back(cont);
+}
+void Room::add_creature(Creature cr){
+	creature_list.push_back(cr);
+}

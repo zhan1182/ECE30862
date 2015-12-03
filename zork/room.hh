@@ -10,6 +10,8 @@
 #include "trigger.hh"
 #include "item.hh"
 #include "border.hh"
+#include "container.hh"
+#include "creature.hh"
 
 using namespace std;
 
@@ -19,6 +21,8 @@ class Room : public Base
 	list<Item> item_list;
 	list<Trigger> trigger_list;
 	list<Border> border_list;
+	list<Container> container_list;
+	list<Creature> creature_list;
 public:
 	Room(string Name, string Description, string Status, string Type);
 	virtual ~Room();
@@ -26,6 +30,8 @@ public:
 	void add_trigger(Trigger tg);
 	void add_item(Item im);
 	void add_border(Border br);
+	void add_container(Container cont);
+	void add_creature(Creature cr);
 };
 
 #endif
