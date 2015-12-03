@@ -11,11 +11,11 @@ using namespace std;
 
 int main(int argc, char ** argv)
 {
-	// string s1 = "base";
-	// string s2 = "test";
+	string s1 = "base";
+	string s2 = "test";
 
 	// Base b(s1, s2);
-	// Room r(s1, s2, "exit");
+	Room r(s1, s2, "exit");
 
 	// b.print();
 
@@ -34,6 +34,10 @@ int main(int argc, char ** argv)
 	Trigger trigger(cdt, type, action, toString, command);
 
 	trigger.print();
+
+	r.print();
+	r.add_trigger(trigger);
+	r.print();
 
 	return EXIT_SUCCESS;
 }

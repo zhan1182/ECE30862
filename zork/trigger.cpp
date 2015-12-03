@@ -6,13 +6,10 @@ using namespace std;
 Trigger::Trigger(Condition CDT, string Type, string Action, string ToString, string Command):
 cdt(CDT), type(Type), action(Action), toString(ToString), command(Command)
 {
-
 }
 
 Trigger::~Trigger()
 {
-
-
 }
 
 void Trigger::print()
