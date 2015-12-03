@@ -6,18 +6,31 @@ using namespace std;
 
 #include "base.hh"
 #include "room.hh"
+#include "condition.hh"
+#include "trigger.hh"
 
 int main(int argc, char ** argv)
 {
-	string s1 = "base";
-	string s2 = "test";
+	// string s1 = "base";
+	// string s2 = "test";
 
-	Base b(s1, s2);
-	Room r(s1, s2, "exit");
+	// Base b(s1, s2);
+	// Room r(s1, s2, "exit");
 
-	b.print();
+	// b.print();
 
-	r.print();
+	// r.print();
+
+	string object = "object";
+	string owner = "owner";
+	string has = "has";
+	string status = "status";
+	string type = "type";
+
+	Condition cdt(object, owner, has, status);
+	Trigger trigger(cdt, type);
+
+	trigger.print();
 
 	return EXIT_SUCCESS;
 }
