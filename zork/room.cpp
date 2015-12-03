@@ -19,3 +19,7 @@ void Room::print(){
 void Room::add_trigger(Trigger tg){
 	trigger_list.push_back(tg);
 }
+
+void Room::add_item(Item im){
+	item_list.push_back(im);
+}

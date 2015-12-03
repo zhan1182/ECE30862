@@ -1,21 +1,19 @@
 using namespace std;
 
-#include "room.hh"
+#include "item.hh"
+// #include "trigger.hh"
 
-Room::Room(string Name, string Description):Base(Name, Description), type(Type)
+Item::Item(string Name, string Description):Base(Name, Description), type(Type)
 {
 }
 
-Room::~Room()
+Item::~Item()
 {
-	
 }
 
-void Room::print(){
-	cout << "Name: " << name << " " << "Type: " << type << endl;
-	cout << "Trigger number: " << trigger_list.size() << endl;
+void Item::print(){
 }
 
-void Room::add_trigger(Trigger tg){
+void Item::add_trigger(Trigger tg){
 	trigger_list.push_back(tg);
 }
