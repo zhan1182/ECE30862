@@ -7,6 +7,7 @@ Item::Item(string Name, string Description, string Status,
            string Writing):
     Base(Name, Description, Status), writing(Writing)
 {
+	turnon = NULL;
 }
 
 Item::~Item()
@@ -34,7 +35,7 @@ void Item::print(){
     
 }
 
-void Item::add_trigger(Trigger tg){
+void Item::add_trigger(Trigger * tg){
     trigger_list.push_back(tg);
 }
 void Item::set_turnon(Turnon* turnon){

@@ -14,7 +14,7 @@ Creature::~Creature()
 void Creature::print(){
 }
 
-void Creature::add_trigger(Trigger tg){
+void Creature::add_trigger(Trigger * tg){
 	trigger_list.push_back(tg);
 }
 

@@ -14,15 +14,14 @@ using namespace std;
 
 class Item : public Base
 {
-    list<Trigger> trigger_list;
+    list<Trigger * > trigger_list;
     string writing;
-    string action;
     Turnon* turnon;
 public:
     Item(string Name, string Description, string Status, string Writing);
     virtual ~Item();
     virtual void print();
-    void add_trigger(Trigger tg);
+    void add_trigger(Trigger * tg);
     void set_turnon(Turnon* turnon);
 };
 

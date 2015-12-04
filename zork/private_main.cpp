@@ -40,10 +40,10 @@ int main(int argc, char ** argv)
 	trigger.print();
 
 	r.print();
-	r.add_trigger(trigger);
+	r.add_trigger(&trigger);
 	r.print();
 
-	Item it(name, des, status, "", "", "");
+	Item it(name, des, status, "");
 	Container cont(name, des, status);
 
 	Creature cr(name, des, status, "");

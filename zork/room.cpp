@@ -16,21 +16,21 @@ void Room::print(){
 	cout << "Trigger number: " << trigger_list.size() << endl;
 }
 
-void Room::add_trigger(Trigger tg){
+void Room::add_trigger(Trigger * tg){
 	trigger_list.push_back(tg);
 }
 
-void Room::add_item(Item im){
+void Room::add_item(Item * im){
 	item_list.push_back(im);
 }
 
-void Room::add_border(Border br){
+void Room::add_border(Border * br){
 	border_list.push_back(br);
 }
 
-void Room::add_container(Container cont){
+void Room::add_container(Container * cont){
 	container_list.push_back(cont);
 }
-void Room::add_creature(Creature cr){
+void Room::add_creature(Creature * cr){
 	creature_list.push_back(cr);
 }
