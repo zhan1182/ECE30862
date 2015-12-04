@@ -13,6 +13,9 @@ public:
 	Base(string Name, string Description, string Status);
 	virtual ~Base();
 	virtual void print();
+	virtual string getName();
+	virtual string getDes();
+	virtual string getStatus();
 protected:
 	const string name;
 	const string description;

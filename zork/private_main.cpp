@@ -48,5 +48,8 @@ int main(int argc, char ** argv)
 
 	Creature cr(name, des, status, "");
 
+	
+
+
 	return EXIT_SUCCESS;
 }
