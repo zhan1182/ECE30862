@@ -14,7 +14,14 @@
 #include "creature.hh"
 
 using namespace std;
+/* Note:
+   1. Add following search fcn
+      list  keyword  return   
+      border  direction room_name
+      
 
+
+ */
 class Room : public Base
 {
     string type;
