@@ -34,7 +34,7 @@ Border* addBorder(xml_node<char>* node){
     return new Border(node->first_node("name")->value(), node->first_node("direction")->value());
 }
 
-Room* searchRoom(list<Room*>* room_list, const char* room_name){
+Room* searchRoomName(list<Room*>* room_list, const char* room_name){
     list<Room*>::iterator iter = room_list->begin();
     while(iter != room_list->end()){
         Room* room = (Room*) *iter;
@@ -107,6 +107,20 @@ Item* addItem(xml_node<char>* node){
         new_item->set_turnon(addTurnon(node->first_node("turnon")));
     return new_item;
 }
+Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory){
+    cout << currRoom->getName() << endl;
+    string input;
+    while{true}{
+        cin >> input;
+        if(input.compare("n")){
+            room
+        }
+
+
+    
+
+    }
+}
 
 int main(int argc, char ** argv)
 {
@@ -125,9 +139,9 @@ int main(int argc, char ** argv)
         room_list.push_back(addRoom(new_room_node));
         new_room_node = new_room_node->next_sibling("room");
     }
-    
-    Room* currRoom = searchRoom(&room_list, "Entrance");
-    cout << currRoom->getDes() << endl;
+    list<Item*> inventory;
+    Room* currRoom = searchRoomName(&room_list, "Entrance");
+    Room* nextRoom = enterRoom(&room_list, currRoom, &inventory);
     return EXIT_SUCCESS;
 }
 
