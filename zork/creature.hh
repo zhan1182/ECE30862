@@ -22,6 +22,7 @@ public:
 	virtual void print();
 	void add_trigger(Trigger * tg);
 	void add_vul(string vul);
+	
 };
 
 #endif
