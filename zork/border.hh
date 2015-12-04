@@ -6,17 +6,16 @@
 #include <string>
 #include <list>
 
-
 using namespace std;
 
 class Border
 {
-	string name;
-	string direction;
+    string name;
+    string direction;
 public:
-	Border(string Name, string Direction);
-	virtual ~Border();
-	virtual void print();
+    Border(string Name, string Direction);
+    virtual ~Border();
+    virtual void print();
 };
 
 #endif

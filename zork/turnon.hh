@@ -3,6 +3,7 @@
 
 #include <string>
 using namespace std;
+
 class Turnon{
     string tostring;
     string action;
