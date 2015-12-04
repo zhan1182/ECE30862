@@ -20,3 +20,19 @@ void Trigger::print()
 	cout << "Print: " << toString << endl;
 	cout << "Command: " << command << endl;
 }
+
+string Trigger::getType(){
+	return type;
+}
+
+string Trigger::getAction(){
+	return action;
+}
+
+string Trigger::getToString(){
+	return toString;
+}
+
+string Trigger::getCommand(){
+	return command;
+}

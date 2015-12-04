@@ -2,7 +2,9 @@
 #define TURNON_H_
 
 #include <string>
+
 using namespace std;
+
 class Turnon{
     string tostring;
     string action;
@@ -10,6 +12,12 @@ public:
     Turnon(string Tostring, string Action);
     virtual ~Turnon();
     virtual void print();
+
+    string getToString();
+    string getAction();
 };
 
 #endif
+
+
+

@@ -35,6 +35,11 @@ void Item::print(){
     
 }
 
+string Item::getWriting(){
+    return writing;
+}
+
+
 void Item::add_trigger(Trigger * tg){
     trigger_list.push_back(tg);
 }

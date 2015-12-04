@@ -16,6 +16,14 @@ void Room::print(){
 	cout << "Trigger number: " << trigger_list.size() << endl;
 }
 
+
+string Room::getType(){
+	return type;
+}
+
+
+
+
 void Room::add_trigger(Trigger * tg){
 	trigger_list.push_back(tg);
 }

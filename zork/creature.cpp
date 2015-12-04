@@ -14,6 +14,13 @@ Creature::~Creature()
 void Creature::print(){
 }
 
+
+string Creature::getAttack(){
+	return attack;
+}
+
+
+
 void Creature::add_trigger(Trigger * tg){
 	trigger_list.push_back(tg);
 }
