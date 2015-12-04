@@ -19,6 +19,12 @@ public:
 	Trigger(Condition CDT, string Type, string Action, string ToString, string Command);
 	virtual ~Trigger();
 	virtual void print();
+
+	string getType();
+	string getAction();
+	string getToString();
+	string getCommand();
+	
 };
 
 

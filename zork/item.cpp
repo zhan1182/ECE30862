@@ -29,6 +29,11 @@ void Item::print(){
     cout << endl;
     
 }
+
+string Item::getWriting(){
+    return writing;
+}
+
 void Item::set_turnon(Turnon* turnon){
     this->turnon = turnon;
 }

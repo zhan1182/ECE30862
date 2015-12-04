@@ -27,6 +27,11 @@ public:
     Room(string Name, string Description, string Status, string Type);
     virtual ~Room();
     virtual void print();
+    
+    // access private fields
+    virtual string getType();
+    
+    // add element to list
     void add_trigger(Trigger * tg);
     void add_item(Item * im);
     void add_border(Border * br);

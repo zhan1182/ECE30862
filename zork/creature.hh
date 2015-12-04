@@ -20,6 +20,9 @@ public:
 	Creature(string Name, string Description, string Status, string Attack);
 	virtual ~Creature();
 	virtual void print();
+
+	string getAttack();
+
 	void add_trigger(Trigger * tg);
 	void add_vul(string vul);
 	

@@ -21,6 +21,9 @@ public:
     Item(string Name, string Description, string Status, string Writing);
     virtual ~Item();
     virtual void print();
+
+    string getWriting();
+
     void add_trigger(Trigger * tg);
     void set_turnon(Turnon* turnon);
 };
