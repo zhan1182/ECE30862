@@ -125,7 +125,21 @@ void print_inventory(list<Item*>* inventory){
         }
         iter++;
     }
-    
+}
+Item* search_inventory(list<Item*>* inventory, string item_name){
+    list<Item*>::iterator iter = inventory->begin();
+    if(inventory->begin() == inventory->end()){
+        cout << "Error! Not found in inventory." << endl;
+        return NULL;
+    }
+    while(iter != inventory->end()){
+        Item* item = (Item*) *iter;
+        if(!item->getName().compare(item_name))
+            return item;
+        iter++;
+    }
+    cout << "Error! Not found in inventory." << endl;
+    return NULL;
 }
 Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory){
     cout << currRoom->getDes() << endl;
@@ -167,9 +181,39 @@ Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory){
                 cout << "Cannot Exit!" << endl;
         }
     }
-    
 }
+void drop_eval(string item_name, Room* currRoom, list<Item*>* inventory){
+    Item* item = inventory->get_item(item_name);
+    if(!item){
+        cout << "Error, item not found in inventory" << endl;
+        return;
+    }
+    currRoom->add_item(item);
+}
+void read_eval(string item_name, Room* currRoom, list<Item*>* inventory){
+    Item* item = search_inventory(inventory, item_name);
+    if(!item)
+        return;
 
+    if(!item->getWriting().compare("")){
+        cout << "Error! Item does not have writing." << endl;
+        return;
+    }
+    cout << item->getWriting() << endl;
+}
+void turnon_eval(string item_name, Room* currRoom, list<Item*>* inventory){
+    Item* item = search_inventory(inventory, item_name);
+    if(!item)
+        return;
+
+    if(!item->get_turnon()){
+        cout << "Error! Item does not have turnon." << endl;
+        return;
+    }
+    cout << item->get_turnon()->getToString() << endl;
+    //Need execuate action
+
+}
 int main(int argc, char ** argv)
 {
     ifstream ifs("samples/itemsample.xml");
