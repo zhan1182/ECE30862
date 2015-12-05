@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstring>
 #include <list>
 #include "rapidxml/rapidxml.hpp"
 #include "base.hh"
@@ -157,15 +158,14 @@ Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory){
                 cout << "Can't go" << endl;
             else
                 return nextRoom;
-        }else if(!input_str.compare("s")){
+        }else if(!input_str.compare("i")){
             print_inventory(inventory);
-
+        }else if(!input_str.compare("open exit")){
+            if(!currRoom->getType().compare("exit"))
+                return NULL;
+            else
+                cout << "Cannot Exit!" << endl;
         }
-        
-        
-        
-        
-    
     }
     
 }
@@ -189,7 +189,7 @@ int main(int argc, char ** argv)
     }
     list<Item*> inventory;
     Room* currRoom = searchRoomName(&room_list, "Entrance");
-    while(currRoom && currRoom->getType().compare("exit")){
+    while(currRoom){
         Room* nextRoom = enterRoom(&room_list, currRoom, &inventory);
         currRoom = nextRoom;
     }
