@@ -14,6 +14,24 @@ Container::~Container()
 void Container::print(){
 }
 
+void Container::open_print(){
+    cout << name;
+    if(item_list.begin() == item_list.end()){
+        cout << " is empty." << endl;
+        return;
+    }
+    bool first = true;
+    list<Item*>::iterator iter = item_list.begin();
+    while(iter != item_list.end()){
+        Item* item = (Item*) *iter;
+        if(first)
+            cout << " contains "+iter->getName();
+        else
+            cout << ", "+iter->getName();
+
+    }
+}
+
 void Container::add_trigger(Trigger * tg){
 	trigger_list.push_back(tg);
 }
