@@ -44,7 +44,18 @@ public:
     void add_border(Border * br);
     void add_container(Container * cont);
     void add_creature(Creature * cr);
+
+    // Search item
     string search_direction(const char* direction);
+
+    // Get element from list
+    Trigger * get_trigger(string trigger_name);
+    Item * get_item(string item_name);
+    Border * get_border(string br_name);
+    Container * get_container(string cont_name);
+    Creature * get_creature(string cr_name);
+
+    // Remove element from list
 };
 
 #endif
