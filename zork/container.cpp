@@ -25,9 +25,9 @@ void Container::open_print(){
     while(iter != item_list.end()){
         Item* item = (Item*) *iter;
         if(first)
-            cout << " contains "+iter->getName();
+            cout << " contains "+item->getName();
         else
-            cout << ", "+iter->getName();
+            cout << ", "+item->getName();
 
     }
 }
