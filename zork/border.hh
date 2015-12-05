@@ -16,6 +16,8 @@ public:
     Border(string Name, string Direction);
     virtual ~Border();
     virtual void print();
+    string getName();
+    string getDirection();
 };
 
 #endif

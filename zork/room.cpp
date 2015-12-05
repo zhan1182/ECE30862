@@ -23,8 +23,6 @@ string Room::getType(){
 }
 
 
-
-
 void Room::add_trigger(Trigger * tg){
 	trigger_list.push_back(tg);
 }
@@ -43,3 +41,16 @@ void Room::add_container(Container * cont){
 void Room::add_creature(Creature * cr){
 	creature_list.push_back(cr);
 }
+
+string Room::search_direction(const char* direction){
+    list<Border*>::iterator iter = border_list.begin();
+    while(iter != border_list.end()){
+        Border* border = (Border*) *iter;
+        if(!border->getDirection().compare(direction))
+            return border->getName();
+        else
+            iter++;
+    }
+    return "";
+}
+

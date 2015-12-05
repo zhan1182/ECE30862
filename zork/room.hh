@@ -34,7 +34,7 @@ public:
     Room(string Name, string Description, string Status, string Type);
     virtual ~Room();
     virtual void print();
-    
+
     // access private fields
     virtual string getType();
     
@@ -44,6 +44,7 @@ public:
     void add_border(Border * br);
     void add_container(Container * cont);
     void add_creature(Creature * cr);
+    string search_direction(const char* direction);
 };
 
 #endif

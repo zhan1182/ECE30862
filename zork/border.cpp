@@ -11,3 +11,9 @@ Border::~Border()
 }
 void Border::print(){
 }
+string Border::getName(){
+    return name;
+}
+string Border::getDirection(){
+    return direction;
+}

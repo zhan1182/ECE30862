@@ -34,7 +34,7 @@ Border* addBorder(xml_node<char>* node){
     return new Border(node->first_node("name")->value(), node->first_node("direction")->value());
 }
 
-Room* searchRoomName(list<Room*>* room_list, const char* room_name){
+Room* searchRoomName(list<Room*>* room_list, const string room_name){
     list<Room*>::iterator iter = room_list->begin();
     while(iter != room_list->end()){
         Room* room = (Room*) *iter;
@@ -107,19 +107,67 @@ Item* addItem(xml_node<char>* node){
         new_item->set_turnon(addTurnon(node->first_node("turnon")));
     return new_item;
 }
-Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory){
-    cout << currRoom->getName() << endl;
-    string input;
-    while{true}{
-        cin >> input;
-        if(input.compare("n")){
-            room
-        }
-
-
-    
-
+void print_inventory(list<Item*>* inventory){
+    list<Item*>::iterator iter = inventory->begin();
+    if(inventory->begin() == inventory->end()){
+        cout << "Inventory: empty" << endl;
+        return;
     }
+    bool first = true;
+    while(iter != inventory->end()){
+        Item* item = (Item*) *iter;
+        if(first){
+            cout << item->getName();
+            first = false;
+        }else{
+            cout << ", "+item->getName();
+        }
+        iter++;
+    }
+    
+}
+Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory){
+    cout << currRoom->getDes() << endl;
+    char input[256];
+    while(true){
+        Room* nextRoom;
+        cin.getline(input, 255);
+        string input_str(input);
+        if(!input_str.compare("n")){
+            nextRoom = searchRoomName(room_list, currRoom->search_direction("north"));//Need search
+            if(!nextRoom)
+                cout << "Can't go" << endl;
+            else
+                return nextRoom;
+        }else if(!input_str.compare("w")){
+            nextRoom = searchRoomName(room_list, currRoom->search_direction("west"));//Need search
+            if(!nextRoom)
+                cout << "Can't go" << endl;
+            else
+                return nextRoom;
+        }else if(!input_str.compare("e")){
+            nextRoom = searchRoomName(room_list, currRoom->search_direction("east"));//Need search
+            if(!nextRoom)
+                cout << "Can't go" << endl;
+            else
+                return nextRoom;
+        }else if(!input_str.compare("s")){
+            nextRoom = searchRoomName(room_list, currRoom->search_direction("south"));//Need search
+            if(!nextRoom)
+                cout << "Can't go" << endl;
+            else
+                return nextRoom;
+        }else if(!input_str.compare("s")){
+            print_inventory(inventory);
+
+        }
+        
+        
+        
+        
+    
+    }
+    
 }
 
 int main(int argc, char ** argv)
@@ -141,7 +189,11 @@ int main(int argc, char ** argv)
     }
     list<Item*> inventory;
     Room* currRoom = searchRoomName(&room_list, "Entrance");
-    Room* nextRoom = enterRoom(&room_list, currRoom, &inventory);
+    while(currRoom && currRoom->getType().compare("exit")){
+        Room* nextRoom = enterRoom(&room_list, currRoom, &inventory);
+        currRoom = nextRoom;
+    }
+    cout << "Game Over" << endl;
     return EXIT_SUCCESS;
 }
 
