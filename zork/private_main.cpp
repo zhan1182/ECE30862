@@ -48,6 +48,15 @@ int main(int argc, char ** argv)
 
 	Creature cr(name, des, status, "");
 
+	r.add_item(&it);
+	cout << "!!!!!!!!!!!!" << endl;
+	Item * itt = r.get_item("dsfs");
+	if(itt){
+		itt->print();
+	}
+	else{
+		cout << "not exist" << endl;
+	}
 	
 
 
