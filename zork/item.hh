@@ -26,7 +26,7 @@ public:
 
     void add_trigger(Trigger * tg);
     void set_turnon(Turnon* turnon);
-
+    Turnon* get_turnon();
     // special clone
     // Item * clone_object_return_pointer();
 

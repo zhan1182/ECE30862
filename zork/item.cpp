@@ -1,7 +1,6 @@
 using namespace std;
 
 #include "item.hh"
-#include "turnon.hh"
 
 Item::Item(string Name, string Description, string Status,
            string Writing):
@@ -43,7 +42,9 @@ void Item::set_turnon(Turnon* turnon){
 void Item::add_trigger(Trigger* tg){
     trigger_list.push_back(tg);
 }
-
+Turnon* Item::get_turnon(){
+    return turnon;
+}
 
 // Item * Item::clone_object_return_pointer(){
 
