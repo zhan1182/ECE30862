@@ -15,7 +15,7 @@ using namespace rapidxml;
 void parse_command(string command_str, list<Room*>* room_list, Room** currRoom, list<Item*>* inventory);
 /* Note:
    Default destructor may case memory leak??
-  
+   Map files contain status??
 
 */
 
@@ -76,7 +76,28 @@ Item* addItem(const xml_node<char>* node){
     return new_item;
 }
 
-// Container* addContainer(const xml_node<char>* )
+Container* addContainer(const xml_node<char>* container_node, const xml_node<char>* root_node){
+    string name;
+    string description;
+    string status;
+    
+    if(container_node->first_node("name"))
+        name = container_node->first_node("name")->value();
+    if(container_node->first_node("description"))
+        name = container_node->first_node("description")->value();
+    if(container_node->first_node("status"))
+        name = container_node->first_node("name")->value();
+    Container* new_container = new Container(name, description, status);
+
+    //Add item
+    xml_node<char>* item_name_node = container_node->first_node("name");
+    while(item_name_node){
+        string item_name = item_name_node->value();
+        new_container->add_item(addItem(breadth_search("item", item_name, root_node->first_node("item"))));
+        item_name_node = item_name_node->next_sibling("name");
+    }
+}
+
 Room* addRoom(const xml_node<char>* node, const xml_node<char>* root_node){
     if(string(node->name()).compare("room")){
         cout << node->name() << endl;
@@ -100,17 +121,27 @@ Room* addRoom(const xml_node<char>* node, const xml_node<char>* root_node){
     Room* new_room = new Room(name, description, status, type);
 
     //Add Border
-    xml_node<char>* border_node = node->first_node("border");
-    while(border_node){
-        new_room->add_border(addBorder(border_node));
-        border_node = border_node->next_sibling("border");
+    xml_node<char>* border_name_node = node->first_node("border");
+    while(border_name_node){
+        new_room->add_border(addBorder(border_name_node));
+        border_name_node = border_name_node->next_sibling("border");
     }
+
     //Add Item
-    xml_node<char>* item_node = node->first_node("item");
-    while(item_node){
-        string item_name = item_node->value();
+    xml_node<char>* item_name_node = node->first_node("item");
+    while(item_name_node){
+        string item_name = item_name_node->value();
         new_room->add_item(addItem(breadth_search("item", item_name, root_node->first_node("item"))));
-        item_node = item_node->next_sibling("item");
+        item_name_node = item_name_node->next_sibling("item");
+    }
+
+    //Add Container
+    xml_node<char>* container_name_node = node->first_node("container");
+    while(container_name_node){
+        string container_name = container_name_node->value();
+        new_room->add_container(addContainer(breadth_search("container", container_name,
+                                                            root_node->first_node("container")), root_node));
+        container_name_node = container_name_node->next_sibling("container");
     }
     return new_room;
     
@@ -209,6 +240,7 @@ void turnon_eval(const string item_name, list<Room*>* room_list, Room** currRoom
         parse_command(item->get_turnon()->getAction(), room_list, currRoom, inventory);
 
 }
+void open_eval()
 
 void parse_command(string command_str, list<Room*>* room_list, Room** currRoom, list<Item*>* inventory){
     if(!command_str.compare("n")){
