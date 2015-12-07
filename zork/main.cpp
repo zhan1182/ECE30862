@@ -11,13 +11,15 @@
 #include "item.hh"
 using namespace std;
 using namespace rapidxml;
+
+void parse_command(string command_str, list<Room*>* room_list, Room** currRoom, list<Item*>* inventory);
 /* Note:
    Default destructor may case memory leak??
   
 
 */
 
-xml_node<char>* breadth_search(const char* type, const string name, xml_node<char>* node){
+const xml_node<char>* breadth_search(const char* type, const string name, const xml_node<char>* node){
     if(node == 0){
         return NULL;
     }
@@ -27,11 +29,11 @@ xml_node<char>* breadth_search(const char* type, const string name, xml_node<cha
     return breadth_search(type, name, node->next_sibling(type));
 }
  
-Turnon* addTurnon(xml_node<char>* node){
+Turnon* addTurnon(const xml_node<char>* node){
     return new Turnon(node->first_node("print")->value(), node->first_node("action")->value());
 }
 
-Border* addBorder(xml_node<char>* node){
+Border* addBorder(const xml_node<char>* node){
     return new Border(node->first_node("name")->value(), node->first_node("direction")->value());
 }
 
@@ -46,7 +48,7 @@ Room* searchRoomName(list<Room*>* room_list, const string room_name){
     }
     return NULL;
 }
-Item* addItem(xml_node<char>* node){
+Item* addItem(const xml_node<char>* node){
     if(string(node->name()).compare("item")){
         cout << node->name() << endl;
         cout << "Type of node is not item" << endl;
@@ -132,7 +134,7 @@ void print_inventory(list<Item*>* inventory){
     }
     cout << endl;
 }
-Item* search_inventory(list<Item*>* inventory, string item_name){
+Item* search_inventory(list<Item*>* inventory, const string item_name){
     list<Item*>::iterator iter = inventory->begin();
     if(inventory->begin() == inventory->end()){
         cout << "Error! Not found in inventory." << endl;
@@ -147,9 +149,20 @@ Item* search_inventory(list<Item*>* inventory, string item_name){
     cout << "Error! Not found in inventory." << endl;
     return NULL;
 }
-void take_eval(string item_name, Room* currRoom, list<Item*>* inventory){
+void remove_inventory(const string item_name, list<Item*>* inventory){
+    list<Item*>::iterator iter = inventory->begin();
+    while(iter != inventory->end()){
+        Item* item = (Item*) *iter;
+        if(!item->getName().compare(item_name)){
+            inventory->erase(iter);
+            return;
+        }
+        iter++;
+    }
+}
+void take_eval(const string item_name, Room** currRoom, list<Item*>* inventory){
     cout << item_name << endl;
-    Item* item = currRoom->get_item(item_name);
+    Item* item = (*currRoom)->get_item(item_name);
     if(!item){
         cout << "Error, item is not found" << endl;
         return;
@@ -158,16 +171,17 @@ void take_eval(string item_name, Room* currRoom, list<Item*>* inventory){
     cout << "Item "+item->getName()+" added to inventory" << endl;
 
 }
-void drop_eval(string item_name, Room* currRoom, list<Item*>* inventory){
+void drop_eval(const string item_name, Room** currRoom, list<Item*>* inventory){
     Item* item = search_inventory(inventory, item_name);
     if(!item){
         cout << "Error, item is not found in inventory" << endl;
         return;
     }
-    currRoom->add_item(item);
+    (*currRoom)->add_item(item);
+    remove_inventory(item_name, inventory);
 }
 
-void read_eval(string item_name, Room* currRoom, list<Item*>* inventory){
+void read_eval(const string item_name, list<Item*>* inventory){
     Item* item = search_inventory(inventory, item_name);
     if(!item)
         return;
@@ -178,7 +192,7 @@ void read_eval(string item_name, Room* currRoom, list<Item*>* inventory){
     }
     cout << item->getWriting() << endl;
 }
-void turnon_eval(string item_name, Room* currRoom, list<Item*>* inventory){
+void turnon_eval(const string item_name, list<Room*>* room_list, Room** currRoom, list<Item*>* inventory){
     Item* item = search_inventory(inventory, item_name);
     if(!item)
         return;
@@ -188,63 +202,71 @@ void turnon_eval(string item_name, Room* currRoom, list<Item*>* inventory){
         return;
     }
     cout << item->get_turnon()->getToString() << endl;
-    //Need execuate action
+    if(item->get_turnon()->getAction().compare(""))
+        
+        parse_command(item->get_turnon()->getAction(), room_list, currRoom, inventory);
 
 }
-void read_eval(string item_name, list<Item*>* inventory){
-    Item* item = search_inventory(inventory, item_name);
-    if(item){
-        cout << item->getWriting() << endl;
 
+void parse_command(string command_str, list<Room*>* room_list, Room** currRoom, list<Item*>* inventory){
+    if(!command_str.compare("n")){
+        Room* nextRoom = searchRoomName(room_list, (*currRoom)->search_direction("north"));//Need search
+        if(!nextRoom)
+            cout << "Can't go" << endl;
+        else{
+            *currRoom = nextRoom;
+            cout << (*currRoom)->getDes() << endl;
+        }
+    }else if(!command_str.compare("w")){
+        Room* nextRoom = searchRoomName(room_list, (*currRoom)->search_direction("west"));//Need search
+        if(!nextRoom)
+            cout << "Can't go" << endl;
+        else{
+            *currRoom = nextRoom;
+            cout << (*currRoom)->getDes() << endl;
+        }
+    }else if(!command_str.compare("e")){
+        Room* nextRoom = searchRoomName(room_list, (*currRoom)->search_direction("east"));//Need search
+        if(!nextRoom)
+            cout << "Can't go" << endl;
+        else{
+            *currRoom = nextRoom;
+            cout << (*currRoom)->getDes() << endl;
+        }
+    }else if(!command_str.compare("s")){
+        Room* nextRoom = searchRoomName(room_list, (*currRoom)->search_direction("south"));//Need search
+        if(!nextRoom)
+            cout << "Can't go" << endl;
+        else{
+            *currRoom = nextRoom;
+            cout << (*currRoom)->getDes() << endl;
+        }
+    }else if(!command_str.compare("i")){
+        print_inventory(inventory);
+    }else if(!command_str.compare("open exit")){
+        if(!(*currRoom)->getType().compare("exit"))
+            *currRoom = NULL;
+        else
+            cout << "Cannot Exit!" << endl;
+    }else if(!command_str.substr(0,7).compare("turn on")){
+        turnon_eval(command_str.substr(8, command_str.size()-8), room_list, currRoom, inventory);
+    }else if(!command_str.substr(0,4).compare("drop")){
+        drop_eval(command_str.substr(5, command_str.size()-5), currRoom, inventory);
+    }else if(!command_str.substr(0,4).compare("take")){
+        take_eval(command_str.substr(5, command_str.size()-5), currRoom, inventory);
+    }else if(!command_str.substr(0,4).compare("read")){
+        read_eval(command_str.substr(5, command_str.size()-5), inventory);
     }
 }
+
 Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory){
     cout << currRoom->getDes() << endl;
     char input[256];
-    while(true){
+    while(currRoom){
         Room* nextRoom;
         cin.getline(input, 255);
         string input_str(input);
-        if(!input_str.compare("n")){
-            nextRoom = searchRoomName(room_list, currRoom->search_direction("north"));//Need search
-            if(!nextRoom)
-                cout << "Can't go" << endl;
-            else
-                return nextRoom;
-        }else if(!input_str.compare("w")){
-            nextRoom = searchRoomName(room_list, currRoom->search_direction("west"));//Need search
-            if(!nextRoom)
-                cout << "Can't go" << endl;
-            else
-                return nextRoom;
-        }else if(!input_str.compare("e")){
-            nextRoom = searchRoomName(room_list, currRoom->search_direction("east"));//Need search
-            if(!nextRoom)
-                cout << "Can't go" << endl;
-            else
-                return nextRoom;
-        }else if(!input_str.compare("s")){
-            nextRoom = searchRoomName(room_list, currRoom->search_direction("south"));//Need search
-            if(!nextRoom)
-                cout << "Can't go" << endl;
-            else
-                return nextRoom;
-        }else if(!input_str.compare("i")){
-            print_inventory(inventory);
-        }else if(!input_str.compare("open exit")){
-            if(!currRoom->getType().compare("exit"))
-                return NULL;
-            else
-                cout << "Cannot Exit!" << endl;
-        }else if(!input_str.substr(0,6).compare("turnon")){
-            turnon_eval(input_str.substr(7, input_str.size()-7), currRoom, inventory);
-        }else if(!input_str.substr(0,4).compare("drop")){
-            drop_eval(input_str.substr(5, input_str.size()-5), currRoom, inventory);
-        }else if(!input_str.substr(0,4).compare("take")){
-            take_eval(input_str.substr(5, input_str.size()-5), currRoom, inventory);
-        }else if(!input_str.substr(0,4).compare("read")){
-            read_eval(input_str.substr(5, input_str.size()-5), currRoom, inventory);
-        }
+        parse_command(input_str, room_list, &currRoom, inventory);
     }
 }
 
