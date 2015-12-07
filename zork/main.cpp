@@ -17,11 +17,11 @@ using namespace rapidxml;
 
 */
 
-xml_node<char>* breadth_search(const char* type, const char* name, xml_node<char>* node){
+xml_node<char>* breadth_search(const char* type, const string name, xml_node<char>* node){
     if(node == 0){
         return NULL;
     }
-    else if(!string(node->first_node("name")->value()).compare(name)){
+    else if(!string(node->name()).compare(type) & !string(node->first_node("name")->value()).compare(name)){
         return node;
     }
     return breadth_search(type, name, node->next_sibling(type));
@@ -46,8 +46,34 @@ Room* searchRoomName(list<Room*>* room_list, const string room_name){
     }
     return NULL;
 }
+Item* addItem(xml_node<char>* node){
+    if(string(node->name()).compare("item")){
+        cout << node->name() << endl;
+        cout << "Type of node is not item" << endl;
+        return NULL;
+    }
 
-Room* addRoom(xml_node<char>* node){
+    string name;
+    string description;
+    string status;
+    string writing;
+
+    if(node->first_node("name"))
+        name = node->first_node("name")->value();
+    if(node->first_node("description"))
+        description = node->first_node("description")->value();
+    if(node->first_node("status"))
+        status = node->first_node("status")->value();
+    if(node->first_node("writing"))
+        writing = node->first_node("writing")->value();
+    Item* new_item = new Item(name, description, status, writing);
+    
+    //Add turnon
+    if(node->first_node("turnon"))
+        new_item->set_turnon(addTurnon(node->first_node("turnon")));
+    return new_item;
+}
+Room* addRoom(xml_node<char>* node, xml_node<char>* root_node){
     if(string(node->name()).compare("room")){
         cout << node->name() << endl;
         cout << "Type of node is not room" << endl;
@@ -75,39 +101,18 @@ Room* addRoom(xml_node<char>* node){
         new_room->add_border(addBorder(border_node));
         border_node = border_node->next_sibling("border");
     }
-
+    //Add Item
+    xml_node<char>* item_node = node->first_node("item");
+    while(item_node){
+        string item_name = item_node->value();
+        new_room->add_item(addItem(breadth_search("item", item_name, root_node->first_node("item"))));
+        item_node = item_node->next_sibling("item");
+    }
     return new_room;
     
 }//Need add more attribute
 
-Item* addItem(xml_node<char>* node){
-    if(string(node->name()).compare("item")){
-        cout << node->name() << endl;
-        cout << "Type of node is not item" << endl;
-        return NULL;
-    }
 
-    string name;
-    string description;
-    string status;
-    string writing;
-
-    if(node->first_node("name"))
-        name = node->first_node("name")->value();
-    if(node->first_node("description"))
-        description = node->first_node("description")->value();
-    if(node->first_node("status"))
-        status = node->first_node("status")->value();
-    if(node->first_node("writing"))
-        writing = node->first_node("writing")->value();
-    Item* new_item = new Item(name, description, status, writing);
-    
-    //Add turnon
-    if(node->first_node("turnon"))
-        cout << node->first_node("turnon")->name() << endl;
-        new_item->set_turnon(addTurnon(node->first_node("turnon")));
-    return new_item;
-}
 void print_inventory(list<Item*>* inventory){
     list<Item*>::iterator iter = inventory->begin();
     if(inventory->begin() == inventory->end()){
@@ -125,6 +130,7 @@ void print_inventory(list<Item*>* inventory){
         }
         iter++;
     }
+    cout << endl;
 }
 Item* search_inventory(list<Item*>* inventory, string item_name){
     list<Item*>::iterator iter = inventory->begin();
@@ -140,6 +146,57 @@ Item* search_inventory(list<Item*>* inventory, string item_name){
     }
     cout << "Error! Not found in inventory." << endl;
     return NULL;
+}
+void take_eval(string item_name, Room* currRoom, list<Item*>* inventory){
+    cout << item_name << endl;
+    Item* item = currRoom->get_item(item_name);
+    if(!item){
+        cout << "Error, item is not found" << endl;
+        return;
+    }
+    inventory->push_back(item);
+    cout << "Item "+item->getName()+" added to inventory" << endl;
+
+}
+void drop_eval(string item_name, Room* currRoom, list<Item*>* inventory){
+    Item* item = search_inventory(inventory, item_name);
+    if(!item){
+        cout << "Error, item is not found in inventory" << endl;
+        return;
+    }
+    currRoom->add_item(item);
+}
+
+void read_eval(string item_name, Room* currRoom, list<Item*>* inventory){
+    Item* item = search_inventory(inventory, item_name);
+    if(!item)
+        return;
+
+    if(!item->getWriting().compare("")){
+        cout << "Error! Item does not have writing." << endl;
+        return;
+    }
+    cout << item->getWriting() << endl;
+}
+void turnon_eval(string item_name, Room* currRoom, list<Item*>* inventory){
+    Item* item = search_inventory(inventory, item_name);
+    if(!item)
+        return;
+
+    if(!item->get_turnon()){
+        cout << "Error! Item does not have turnon." << endl;
+        return;
+    }
+    cout << item->get_turnon()->getToString() << endl;
+    //Need execuate action
+
+}
+void read_eval(string item_name, list<Item*>* inventory){
+    Item* item = search_inventory(inventory, item_name);
+    if(item){
+        cout << item->getWriting() << endl;
+
+    }
 }
 Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory){
     cout << currRoom->getDes() << endl;
@@ -179,41 +236,19 @@ Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory){
                 return NULL;
             else
                 cout << "Cannot Exit!" << endl;
+        }else if(!input_str.substr(0,6).compare("turnon")){
+            turnon_eval(input_str.substr(7, input_str.size()-7), currRoom, inventory);
+        }else if(!input_str.substr(0,4).compare("drop")){
+            drop_eval(input_str.substr(5, input_str.size()-5), currRoom, inventory);
+        }else if(!input_str.substr(0,4).compare("take")){
+            take_eval(input_str.substr(5, input_str.size()-5), currRoom, inventory);
+        }else if(!input_str.substr(0,4).compare("read")){
+            read_eval(input_str.substr(5, input_str.size()-5), currRoom, inventory);
         }
     }
 }
-void drop_eval(string item_name, Room* currRoom, list<Item*>* inventory){
-    Item* item = inventory->get_item(item_name);
-    if(!item){
-        cout << "Error, item not found in inventory" << endl;
-        return;
-    }
-    currRoom->add_item(item);
-}
-void read_eval(string item_name, Room* currRoom, list<Item*>* inventory){
-    Item* item = search_inventory(inventory, item_name);
-    if(!item)
-        return;
 
-    if(!item->getWriting().compare("")){
-        cout << "Error! Item does not have writing." << endl;
-        return;
-    }
-    cout << item->getWriting() << endl;
-}
-void turnon_eval(string item_name, Room* currRoom, list<Item*>* inventory){
-    Item* item = search_inventory(inventory, item_name);
-    if(!item)
-        return;
 
-    if(!item->get_turnon()){
-        cout << "Error! Item does not have turnon." << endl;
-        return;
-    }
-    cout << item->get_turnon()->getToString() << endl;
-    //Need execuate action
-
-}
 int main(int argc, char ** argv)
 {
     ifstream ifs("samples/itemsample.xml");
@@ -228,7 +263,7 @@ int main(int argc, char ** argv)
     list<Room*> room_list;
     xml_node<char>* new_room_node = doc.first_node()->first_node("room");
     while(new_room_node){
-        room_list.push_back(addRoom(new_room_node));
+        room_list.push_back(addRoom(new_room_node, doc.first_node()));
         new_room_node = new_room_node->next_sibling("room");
     }
     list<Item*> inventory;
