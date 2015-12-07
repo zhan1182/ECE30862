@@ -19,7 +19,7 @@ void Container::open_print(){
         cout << name+" is empty." << endl;
         return;
     }
-    cout << name+" contains "
+    cout << name+" contains ";
     bool first = true;
     list<Item*>::iterator iter = item_list.begin();
     while(iter != item_list.end()){

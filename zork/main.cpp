@@ -240,7 +240,10 @@ void turnon_eval(const string item_name, list<Room*>* room_list, Room** currRoom
         parse_command(item->get_turnon()->getAction(), room_list, currRoom, inventory);
 
 }
-void open_eval()
+// void open_eval(const string container_name, Room** currRoom){
+    
+
+// }
 
 void parse_command(string command_str, list<Room*>* room_list, Room** currRoom, list<Item*>* inventory){
     if(!command_str.compare("n")){
