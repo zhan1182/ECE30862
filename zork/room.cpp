@@ -74,7 +74,6 @@ string Room::search_direction(const char* direction){
 Item * Room::get_item(string item_name){
     list<Item*>::iterator iter;
     for (iter = item_list.begin(); iter != item_list.end(); iter++){
-        cout << ((Item *) *iter)->getName() << endl;
         if( ((Item *) *iter)->getName() == item_name){
             // tmp variable
             Item * return_item = *iter;
