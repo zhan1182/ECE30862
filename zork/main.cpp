@@ -75,7 +75,9 @@ Item* addItem(const xml_node<char>* node){
         new_item->set_turnon(addTurnon(node->first_node("turnon")));
     return new_item;
 }
-Room* addRoom(xml_node<char>* node, xml_node<char>* root_node){
+
+// Container* addContainer(const xml_node<char>* )
+Room* addRoom(const xml_node<char>* node, const xml_node<char>* root_node){
     if(string(node->name()).compare("room")){
         cout << node->name() << endl;
         cout << "Type of node is not room" << endl;
