@@ -125,3 +125,12 @@ Creature * Room::get_creature(string creature_name){
     }
     return NULL;
 }
+
+// Need search_item in container class
+// Item* Room::search_item_container(string name){
+//     list<Container*>::iterator iter = container_list.begin();
+//     while(iter != container_list.end()){
+        
+
+//     }
+// }

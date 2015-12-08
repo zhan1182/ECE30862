@@ -10,16 +10,17 @@ using namespace std;
 class Base
 {
 public:
-	Base(string Name, string Description, string Status);
-	virtual ~Base();
-	virtual void print();
-	virtual string getName();
-	virtual string getDes();
-	virtual string getStatus();
+    Base(string Name, string Description, string Status);
+    virtual ~Base();
+    virtual void print();
+    virtual string getName();
+    virtual string getDes();
+    virtual string getStatus();
+    virtual void changeStatus(string Status);
 protected:
-	const string name;
-	const string description;
-	string status;
+    const string name;
+    const string description;
+    string status;
 };
 
 

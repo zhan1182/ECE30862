@@ -35,3 +35,7 @@ string Base::getStatus()
 	return status;
 }
 
+void Base::changeStatus(string Status){
+    status = Status;
+} 
+

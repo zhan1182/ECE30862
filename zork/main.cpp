@@ -84,17 +84,27 @@ Container* addContainer(const xml_node<char>* container_node, const xml_node<cha
     if(container_node->first_node("name"))
         name = container_node->first_node("name")->value();
     if(container_node->first_node("description"))
-        name = container_node->first_node("description")->value();
+        description = container_node->first_node("description")->value();
     if(container_node->first_node("status"))
-        name = container_node->first_node("name")->value();
+        status = container_node->first_node("name")->value();
+    else
+        status = "unopened";
     Container* new_container = new Container(name, description, status);
-
+    
     //Add item
     xml_node<char>* item_name_node = container_node->first_node("name");
     while(item_name_node){
         string item_name = item_name_node->value();
         new_container->add_item(addItem(breadth_search("item", item_name, root_node->first_node("item"))));
         item_name_node = item_name_node->next_sibling("name");
+    }
+    
+    //Add accpet
+    xml_node<char>* accept_node = container_node->first_node("accept");
+    while(accept_node){
+        string accept_name = accept_node->value();
+        new_container->add_accept(accept_name);
+        accept_node = accept_node->next_sibling("accept");
     }
 }
 
@@ -210,6 +220,7 @@ void drop_eval(const string item_name, Room** currRoom, list<Item*>* inventory){
         cout << "Error, item is not found in inventory" << endl;
         return;
     }
+    cout << item_name+" dropped." << endl;
     (*currRoom)->add_item(item);
     remove_inventory(item_name, inventory);
 }
@@ -220,12 +231,13 @@ void read_eval(const string item_name, list<Item*>* inventory){
         return;
 
     if(!item->getWriting().compare("")){
-        cout << "Error! Item does not have writing." << endl;
+        cout << "Nothing written." << endl;
         return;
     }
     cout << item->getWriting() << endl;
 }
 void turnon_eval(const string item_name, list<Room*>* room_list, Room** currRoom, list<Item*>* inventory){
+    cout << "You activate the "+item_name+"." << endl;
     Item* item = search_inventory(inventory, item_name);
     if(!item)
         return;
@@ -240,10 +252,16 @@ void turnon_eval(const string item_name, list<Room*>* room_list, Room** currRoom
         parse_command(item->get_turnon()->getAction(), room_list, currRoom, inventory);
 
 }
-// void open_eval(const string container_name, Room** currRoom){
-    
-
-// }
+void open_eval(const string container_name, Room** currRoom){
+    Container* container = (*currRoom)->get_container(container_name);
+    if(container){
+        container->open_print();
+        container->changeStatus("opened");
+        return;
+    }
+    cout << "Container "+container_name+" does nbot exist." << endl;
+    return;
+}
 
 void parse_command(string command_str, list<Room*>* room_list, Room** currRoom, list<Item*>* inventory){
     if(!command_str.compare("n")){
