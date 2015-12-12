@@ -108,6 +108,64 @@ Container* addContainer(const xml_node<char>* container_node, const xml_node<cha
     }
 }
 
+Condition* addCondition(const xml_node<char>* condition_node){
+    string object;
+    string owner;
+    string has;
+    string status;
+    if(condition_node->first_node("object"))
+        object = condition_node->first_node("object")->value();
+    if(condition_node->first_node("owner"))
+        object = condition_node->first_node("owner")->value();
+    if(condition_node->first_node("has"))
+        object = condition_node->first_node("has")->value();
+    if(condition_node->first_node("status"))
+        object = condition_node->first_node("status")->value();
+    return new Condition(object, owner, has, status);
+}
+
+Attack* addAttack(const xml_node<char>* attack_node){
+    string print;
+    Condition* condition = NULL;
+    if(attack_node->first_node("print")){
+        print = attack_node->first_node("print")->value();
+    }
+    if(attack_node->first_node("condition")){
+        condition = addCondition(attack_node->first_node("condition"));
+    }
+    Attack* attack_tmp = new Attack(print, condition);
+
+    xml_node<char>* action_node = attack_node->first_node("action");
+    while(action_node){
+        attack_tmp->add_action(action_node->value());
+        action_node = action_node->next_sibling("action");
+    }
+    return attack_tmp;
+}
+
+Creature* addCreature(const xml_node<char>* creature_node){
+    string name = creature_node->first_node("name")->value();
+    string description;
+    string status;
+    Attack* attack = NULL;
+    if(creature_node->first_node("description"))
+        description = creature_node->first_node("description")->value();
+    if(creature_node->first_node("status"))
+        status = creature_node->first_node("status")->value();
+    if(creature_node->first_node("attack"))
+        attack = addAttack(creature_node->first_node("attack"));
+    Creature* creature_tmp = new Creature(name, description, status, attack);
+
+    //Add vulnerability
+    xml_node<char>* vul_node = creature_node->first_node("vulnerability");
+    while(vul_node){
+        creature_tmp->add_vul(vul_node->value());
+        vul_node = vul_node->next_sibling("vulnerability");
+    }
+    return creature_tmp;
+
+}
+
 Room* addRoom(const xml_node<char>* node, const xml_node<char>* root_node){
     if(string(node->name()).compare("room")){
         cout << node->name() << endl;
