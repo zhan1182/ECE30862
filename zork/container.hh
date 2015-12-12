@@ -25,6 +25,7 @@ public:
     void add_item(Item * im);
     void add_accept(string acc);
     void open_print();
+    string getAcceptByName(string name);
 };
 
 #endif

@@ -43,3 +43,8 @@ void Container::add_item(Item * im){
 void Container::add_accept(string acc){
 	accept_list.push_back(acc);
 }
+
+
+string Container::getAcceptByName(string name){
+    
+}

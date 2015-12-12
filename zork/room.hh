@@ -56,6 +56,9 @@ public:
     Creature * get_creature(string cr_name);
 
     // Remove element from list
+
+    // Search element from list
+    Container * search_container(string cont_name);
 };
 
 #endif
