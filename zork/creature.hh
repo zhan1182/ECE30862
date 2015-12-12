@@ -8,6 +8,7 @@
 
 #include "base.hh"
 #include "trigger.hh"
+#include "attack.hh"
 
 using namespace std;
 
@@ -15,16 +16,19 @@ class Creature : public Base
 {
 	list<string> vul_list;
 	list<Trigger * > trigger_list;
-	string attack;
+	Attack * attack;
 public:
-	Creature(string Name, string Description, string Status, string Attack);
+	Creature(string Name, string Description, string Status, Attack * creature_attack);
 	virtual ~Creature();
 	virtual void print();
 
-	string getAttack();
+	Attack * getAttack();
 
 	void add_trigger(Trigger * tg);
 	void add_vul(string vul);
+
+	// check vul
+	bool check_vul(list<Item*> * inventory);
 	
 };
 
