@@ -90,3 +90,7 @@ __MACOSX*
 # Executables:
 *.out
 *.o
+
+
+# tmp outputs
+*.output
