@@ -49,6 +49,10 @@ Room* searchRoomName(list<Room*>* room_list, const string room_name){
     return NULL;
 }
 Item* addItem(const xml_node<char>* node){
+    if(node == NULL){
+        cout << "item node is null" << endl;
+        return NULL;
+    }
     if(string(node->name()).compare("item")){
         cout << node->name() << endl;
         cout << "Type of node is not item" << endl;
@@ -77,6 +81,11 @@ Item* addItem(const xml_node<char>* node){
 }
 
 Container* addContainer(const xml_node<char>* container_node, const xml_node<char>* root_node){
+    if(string(container_node->name()).compare("container")){
+        cout << container_node->name() << endl;
+        cout << "Type of node is not room" << endl;
+        return NULL;
+    }
     string name;
     string description;
     string status;
@@ -86,16 +95,18 @@ Container* addContainer(const xml_node<char>* container_node, const xml_node<cha
     if(container_node->first_node("description"))
         description = container_node->first_node("description")->value();
     if(container_node->first_node("status"))
-        status = container_node->first_node("name")->value();
+        status = container_node->first_node("status")->value();
     else
         status = "unopened";
     Container* new_container = new Container(name, description, status);
     
     //Add item
-    xml_node<char>* item_name_node = container_node->first_node("name");
+    xml_node<char>* item_name_node = container_node->first_node("item");
     while(item_name_node){
         string item_name = item_name_node->value();
-        new_container->add_item(addItem(breadth_search("item", item_name, root_node->first_node("item"))));
+        cout << item_name << endl;
+        new_container->add_item(addItem(breadth_search("item", item_name,
+                                                       root_node->first_node("item"))));
         item_name_node = item_name_node->next_sibling("name");
     }
     
@@ -208,7 +219,8 @@ Room* addRoom(const xml_node<char>* node, const xml_node<char>* root_node){
     while(container_name_node){
         string container_name = container_name_node->value();
         new_room->add_container(addContainer(breadth_search("container", container_name,
-                                                            root_node->first_node("container")), root_node));
+                                                            root_node->first_node("container")),
+                                             root_node));
         container_name_node = container_name_node->next_sibling("container");
     }
     return new_room;
