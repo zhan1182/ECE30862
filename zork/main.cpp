@@ -235,6 +235,7 @@ void print_inventory(list<Item*>* inventory){
         return;
     }
     bool first = true;
+    cout << "Inventory: " << endl;
     while(iter != inventory->end()){
         Item* item = (Item*) *iter;
         if(first){
@@ -359,9 +360,10 @@ void read_eval(const string item_name, list<Item*>* inventory){
 void turnon_eval(const string item_name, list<Room*>* room_list, Room** currRoom, list<Item*>* inventory){
     cout << "You activate the "+item_name+"." << endl;
     Item* item = search_inventory(inventory, item_name);
-    if(!item)
+    if(!item){
+        cout << "Error. Not found in inventory." << endl;
         return;
-
+    }
     if(!item->get_turnon()){
         cout << "Error! Item does not have turnon." << endl;
         return;
