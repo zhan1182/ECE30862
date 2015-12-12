@@ -41,8 +41,27 @@ void Creature::add_vul(string vul){
 
 
 
-bool check_vul(list<Item*> * inventory){
-	
+bool Creature::check_vul(list<Item*> * inventory){
+
+	list<Item *>::iterator iter;
+	Item * item_tmp;
+
+	list<string>::iterator iter_str;
+
+	for (iter = inventory->begin(); iter != inventory->end(); iter++){
+
+		item_tmp = (Item *) *iter;
+
+		for(iter_str = vul_list.begin(); iter_str != vul_list.end(); iter_str++){
+			if( item_tmp->getName() == *iter_str){
+            	return true;
+        	}
+		}
+
+    }
+    return false;
+
+
 }
 
 

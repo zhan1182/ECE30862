@@ -9,6 +9,7 @@
 #include "base.hh"
 #include "trigger.hh"
 #include "attack.hh"
+#include "item.hh"
 
 using namespace std;
 
