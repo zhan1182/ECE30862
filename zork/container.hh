@@ -25,7 +25,12 @@ public:
     void add_item(Item * im);
     void add_accept(string acc);
     void open_print();
+
     bool look_acceptance_by_item_name(string it_name);
+
+    // return item_list
+    list<Item *> * get_item_list_ptr();
+    void remove_item_from_list(string it_name);
 };
 
 #endif

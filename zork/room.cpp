@@ -72,15 +72,51 @@ string Room::search_direction(const char* direction){
 
 
 Item * Room::get_item(string item_name){
+    // Iters
     list<Item*>::iterator iter;
+    list<Container *>::iterator cont_iter;
+
+    // Tmp variable
+    Item * it_tmp;
+    Item * return_item;
+    Container * cont_tmp;
+
+    // Search item under room
     for (iter = item_list.begin(); iter != item_list.end(); iter++){
-        if( ((Item *) *iter)->getName() == item_name){
+
+        it_tmp = (Item *) *iter;
+
+        if( it_tmp->getName() == item_name){
             // tmp variable
-            Item * return_item = *iter;
+            return_item = *iter;
             item_list.erase(iter);
             return return_item;
         }
     }
+
+    // Search item under every container
+    for (cont_iter = container_list.begin(); cont_iter != container_list.end(); cont_iter++){
+
+        cont_tmp = (Container *) *cont_iter;
+
+        if( cont_tmp->getStatus() == "locked" || cont_tmp->getStatus() == "unopened"){
+            continue;
+        }
+        for (iter = cont_tmp->get_item_list_ptr()->begin(); iter != cont_tmp->get_item_list_ptr()->end(); iter++){
+
+            it_tmp = (Item *) *iter;
+
+            if( it_tmp->getName() == item_name){
+                // tmp variable
+                return_item = *iter;
+
+                cont_tmp->get_item_list_ptr()->erase(iter);
+
+                return return_item;
+            }
+        }
+    }
+
     return NULL;
 }
 

@@ -57,3 +57,25 @@ bool Container::look_acceptance_by_item_name(string it_name){
     }
     return false;
 }
+
+
+list<Item *> * Container::get_item_list_ptr(){
+    return &item_list;
+}
+
+void Container::remove_item_from_list(string it_name){
+
+    list<Item *>::iterator iter;
+    Item * it_tmp;
+
+    for (iter = item_list.begin(); iter != item_list.end(); iter++){
+
+        it_tmp = (Item *) *iter;
+
+        if( it_tmp->getName() == it_name){
+            item_list.erase(iter);
+            break;
+        }
+    }
+    return;
+}
