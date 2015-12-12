@@ -214,6 +214,7 @@ void take_eval(const string item_name, Room** currRoom, list<Item*>* inventory){
     cout << "Item "+item->getName()+" added to inventory" << endl;
 
 }
+
 void drop_eval(const string item_name, Room** currRoom, list<Item*>* inventory){
     Item* item = search_inventory(inventory, item_name);
     if(!item){
@@ -224,6 +225,54 @@ void drop_eval(const string item_name, Room** currRoom, list<Item*>* inventory){
     (*currRoom)->add_item(item);
     remove_inventory(item_name, inventory);
 }
+
+string get_name_from_command(const string command){
+    int i;
+    for(i = 0; i < command.size() - 1; ++i){
+        if(!command.substr(i, 2).compare("in"))
+            return command.substr(0, i-1);
+
+    }
+    return string("");
+
+}
+
+string get_container_from_command(const string command){
+    int i;
+    for(i = 0; i < command.size() - 1; ++i){
+        if(!command.substr(i, 2).compare("in"))
+            return command.substr(i+3, command.size());
+
+    }
+    return string("");
+}
+
+void put_eval(const string command, Room** currRoom, list<Item*>* inventory){
+    string item_name = get_name_from_command(command);
+    string container_name = get_container_from_command(command);
+    cout << "Item name is "+item_name << endl;
+    cout << "Container name is "+container_name << endl;
+    if(!item_name.compare("") | !container_name.compare("")){
+        cout << "Put command error" << endl;
+        return;
+    }
+    Item* item = search_inventory(inventory, item_name);
+    if(!item)
+        return;
+    Container* container = (*currRoom)->search_container(container_name);
+    if(!container){
+        cout << "Error. Container could not be fond." << endl;
+        return;
+    }
+    if(container->look_acceptance_by_item_name(item_name)){
+        remove_inventory(item_name, inventory);
+        container->add_item(item);
+        cout << "Item "+item_name+" added to "+ container_name << endl;
+        return;
+    }
+    cout << "Error. Cannot put in container" << endl;
+}
+
 
 void read_eval(const string item_name, list<Item*>* inventory){
     Item* item = search_inventory(inventory, item_name);
@@ -236,6 +285,7 @@ void read_eval(const string item_name, list<Item*>* inventory){
     }
     cout << item->getWriting() << endl;
 }
+
 void turnon_eval(const string item_name, list<Room*>* room_list, Room** currRoom, list<Item*>* inventory){
     cout << "You activate the "+item_name+"." << endl;
     Item* item = search_inventory(inventory, item_name);
@@ -253,10 +303,11 @@ void turnon_eval(const string item_name, list<Room*>* room_list, Room** currRoom
 
 }
 void open_eval(const string container_name, Room** currRoom){
-    Container* container = (*currRoom)->get_container(container_name);
+    Container* container = (*currRoom)->search_container(container_name);
     if(container){
         container->open_print();
-        container->changeStatus("opened");
+        if(container->getStatus().compare("unopened"))
+            container->changeStatus("opened");
         return;
     }
     cout << "Container "+container_name+" does nbot exist." << endl;
@@ -311,6 +362,8 @@ void parse_command(string command_str, list<Room*>* room_list, Room** currRoom, 
         take_eval(command_str.substr(5, command_str.size()-5), currRoom, inventory);
     }else if(!command_str.substr(0,4).compare("read")){
         read_eval(command_str.substr(5, command_str.size()-5), inventory);
+    }else if(!command_str.substr(0,3).compare("put")){
+        put_eval(command_str.substr(4, command_str.size()-4), currRoom, inventory);
     }
 }
 
