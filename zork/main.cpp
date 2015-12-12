@@ -381,6 +381,10 @@ Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory){
 
 int main(int argc, char ** argv)
 {
+    if(argc != 2){
+        cerr << "Usage: ./a.out <xmlfile>." << endl;
+        return EXIT_FAILURE;
+    }
     ifstream ifs("samples/itemsample.xml");
     string text((istreambuf_iterator<char>(ifs)),
                 istreambuf_iterator<char>());
