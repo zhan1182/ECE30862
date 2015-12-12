@@ -385,7 +385,7 @@ int main(int argc, char ** argv)
         cerr << "Usage: ./a.out <xmlfile>." << endl;
         return EXIT_FAILURE;
     }
-    ifstream ifs("samples/itemsample.xml");
+    ifstream ifs(argv[1]);
     string text((istreambuf_iterator<char>(ifs)),
                 istreambuf_iterator<char>());
 
