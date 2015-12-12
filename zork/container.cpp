@@ -45,6 +45,15 @@ void Container::add_accept(string acc){
 }
 
 
-string Container::getAcceptByName(string name){
-    
+bool Container::look_acceptance_by_item_name(string it_name){
+    if (accept_list.empty()){
+        return true;
+    }
+    list<string>::iterator iter;
+    for (iter = accept_list.begin(); iter != accept_list.end(); iter++){
+        if( *iter == it_name){
+            return true;
+        }
+    }
+    return false;
 }

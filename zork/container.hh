@@ -25,7 +25,7 @@ public:
     void add_item(Item * im);
     void add_accept(string acc);
     void open_print();
-    string getAcceptByName(string name);
+    bool look_acceptance_by_item_name(string it_name);
 };
 
 #endif
