@@ -138,7 +138,7 @@ Creature * Room::get_creature(string creature_name){
 Container * Room::search_container(string cont_name){
     list<Container*>::iterator iter;
     for (iter = container_list.begin(); iter != container_list.end(); iter++){
-        if( ((Container *) *iter)->getName() == container_name){
+        if( ((Container *) *iter)->getName() == cont_name){
             // tmp variable
             Container * return_container = *iter;
             return return_container;
