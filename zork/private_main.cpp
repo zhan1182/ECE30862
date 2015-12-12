@@ -46,7 +46,7 @@ int main(int argc, char ** argv)
 	Item it(name, des, status, "");
 	Container cont(name, des, status);
 
-	Creature cr(name, des, status, "");
+	// Creature cr(name, des, status, "");
 
 	r.add_item(&it);
 	cout << "!!!!!!!!!!!!" << endl;
@@ -57,6 +57,10 @@ int main(int argc, char ** argv)
 	else{
 		cout << "not exist" << endl;
 	}
+
+	cout << "last" << endl;
+
+	cout << cont.getStatus() << endl;
 	
 
 

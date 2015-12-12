@@ -182,3 +182,10 @@ Container * Room::search_container(string cont_name){
     }
     return NULL;
 }
+
+
+
+// Returen lists pointer
+list<Container *> * Room::return_container_list(){
+    return &container_list;
+}

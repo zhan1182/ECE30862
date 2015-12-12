@@ -60,6 +60,9 @@ def _test_(test_case):
 
 if __name__ == "__main__":
 
+	compile_command = "g++ -g main.cpp base.cpp room.cpp trigger.cpp turnon.cpp item.cpp creature.cpp container.cpp border.cpp condition.cpp attack.cpp"
+	os.system(compile_command)
+
 	if len(sys.argv) < 2:
 		test_all()
 		sys.exit()

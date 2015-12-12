@@ -117,6 +117,7 @@ Container* addContainer(const xml_node<char>* container_node, const xml_node<cha
         new_container->add_accept(accept_name);
         accept_node = accept_node->next_sibling("accept");
     }
+    return new_container;
 }
 
 Condition* addCondition(const xml_node<char>* condition_node){
@@ -218,9 +219,11 @@ Room* addRoom(const xml_node<char>* node, const xml_node<char>* root_node){
     xml_node<char>* container_name_node = node->first_node("container");
     while(container_name_node){
         string container_name = container_name_node->value();
-        new_room->add_container(addContainer(breadth_search("container", container_name,
-                                                            root_node->first_node("container")),
-                                             root_node));
+
+        Container * cont_tmp = addContainer(breadth_search("container", container_name, root_node->first_node("container")), root_node);
+
+        new_room->add_container(cont_tmp);
+
         container_name_node = container_name_node->next_sibling("container");
     }
     return new_room;
