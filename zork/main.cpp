@@ -329,7 +329,6 @@ Room* addRoom(const xml_node<char>* node, const xml_node<char>* root_node){
     
 }//Need add more attribute
 
-
 void print_inventory(list<Item*>* inventory){
     list<Item*>::iterator iter = inventory->begin();
     if(inventory->begin() == inventory->end()){
@@ -620,7 +619,13 @@ void open_eval(const string container_name, Room** currRoom){
     cout << "Container "+container_name+" does nbot exist." << endl;
     return;
 }
+void exec_trigger(Trigger* trigger, string command_str, list<Room*>* room_list, Room** currRoom,
+                  list<Item*>* inventory, xml_node<char>* root_node){
+    if(!trigger.getPrint_Message().compare(""))
+        cout << getPrint_message() << endl;
+    
 
+}
 void parse_command(string command_str, list<Room*>* room_list, Room** currRoom,
                    list<Item*>* inventory, xml_node<char>* root_node){
     if(!command_str.compare("n")){
