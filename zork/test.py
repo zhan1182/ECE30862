@@ -5,7 +5,7 @@ import sys
 
 
 tmp_output = "tmp.output"
-executable = "./a.out"
+executable = "a.out"
 
 def print_header(test_case):
 
@@ -18,7 +18,7 @@ def _test_exe(test_case):
 
 	print_header("Test " + test_case)
 
-	exe_command = executable + " " + xml_file_path + " < " + input_file_path + " > " + tmp_output
+	exe_command = "./" + executable + " " + xml_file_path + " < " + input_file_path + " > " + tmp_output
 	os.system(exe_command)
 
 	diff_comand = "diff -y " + tmp_output + " " + output_file_path
@@ -60,8 +60,16 @@ def _test_(test_case):
 
 if __name__ == "__main__":
 
+	if os.path.isfile(executable):
+		os.remove(executable)
+	
 	compile_command = "g++ -g main.cpp base.cpp room.cpp trigger.cpp turnon.cpp item.cpp creature.cpp container.cpp border.cpp condition.cpp attack.cpp"
 	os.system(compile_command)
+	
+	if not os.path.isfile(executable):
+		print("Compile failed")
+		sys.exit()
+
 
 	if len(sys.argv) < 2:
 		test_all()
