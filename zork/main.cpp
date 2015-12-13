@@ -248,6 +248,7 @@ Creature* addCreature(const xml_node<char>* creature_node, Room* currRoom){
     while(trigger_node){
         Trigger * trigger_tmp = addTrigger(trigger_node);
         creature_tmp->add_trigger(trigger_tmp);
+        currRoom->add_trigger(trigger_tmp);
         trigger_node = trigger_node->next_sibling("trigger");
     }
 
@@ -625,6 +626,17 @@ void open_eval(const string container_name, Room** currRoom){
     cout << "Container "+container_name+" does nbot exist." << endl;
     return;
 }
+// Base* find_item(list<Room*>* room_list, list<Item*>* inventory){
+//     Base* base = 
+//     return NULL
+// }
+void update_eval(const string command){
+    string item = get_object_from_add(command);
+    string status = get_room_from_add(command);
+    
+
+}
+
 void exec_trigger(Trigger* trigger, string command_str, list<Room*>* room_list, Room** currRoom,
                   list<Item*>* inventory, xml_node<char>* root_node){
     if(!trigger->getPrint_Message().compare("")){
@@ -690,7 +702,11 @@ void parse_command(string command_str, list<Room*>* room_list, Room** currRoom,
         attack_eval(command_str.substr(7, command_str.size()-7), room_list, currRoom, inventory, root_node);
     }else if(!command_str.substr(0,6).compare("Delete")){
         delete_eval(command_str.substr(7, command_str.size()-7), currRoom, room_list);
-    }else if(!command_str.substr(0,3).compare("Add")){
+    }
+// else if(!command_str.substr(0,6).compare("Update")){
+//    //      update_eval(command_str.substr(7, command_str.size()-7), currRoom, room_list);
+    // } 
+    else if(!command_str.substr(0,3).compare("Add")){
         add_eval(command_str.substr(4, command_str.size()-4), room_list, root_node, currRoom);
     }else if(!command_str.compare("Game Over")){
         *currRoom = NULL;
