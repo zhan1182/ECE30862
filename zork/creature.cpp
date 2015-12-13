@@ -60,9 +60,19 @@ bool Creature::check_vul(list<Item*> * inventory){
 
     }
     return false;
-
-
 }
 
+
+bool Creature::check_vul_with(string weapon){
+	list<string>::iterator iter_str;
+
+	for(iter_str = vul_list.begin(); iter_str != vul_list.end(); iter_str++){
+		if( *iter_str == weapon){
+            return true;
+        }
+	}
+	
+    return false;
+}
 
 

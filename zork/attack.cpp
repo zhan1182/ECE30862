@@ -20,3 +20,10 @@ void Attack::add_action(string action){
 	action_list.push_back(action);
 }
 
+string Attack::get_print_message(){
+	return print_message;
+}
+
+string Attack::get_action(){
+	return action_list.pop_front();
+}

@@ -59,7 +59,7 @@ public:
 
     // Search element from list
     Container * search_container(string cont_name);
-
+    Creature * search_creature(string cr_name);
 
     // return list pointers
     list<Container *> * return_container_list();

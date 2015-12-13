@@ -24,6 +24,11 @@ public:
     virtual ~Attack();
     virtual void print();
     virtual void add_action(string Action);
+
+    string get_print_message();
+
+    string get_action();
+
 };
 
 
