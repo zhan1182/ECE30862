@@ -26,7 +26,7 @@ string Attack::get_print_message(){
 
 string Attack::get_action(){
 	if(action_list.empty()){
-		return "";
+		return string("");
 	}
 	string return_str = action_list.front();
 	action_list.pop_front();

@@ -57,37 +57,3 @@ Trigger * addTrigger(const xml_node<char>* node){
 
     return new_trigger;
 }
-
-
-    // //Add Trigger in room
-    // xml_node<char>* trigger_node = node->first_node("trigger");
-    // while(trigger_node){
-    //     Trigger * trigger_tmp = addTrigger(trigger_node);
-    //     new_room->add_trigger(trigger_tmp);
-    //     trigger_node = trigger_node->next_sibling("trigger");
-    // }
-
-    // //Add Trigger in item
-    // xml_node<char>* trigger_node = node->first_node("trigger");
-    // while(trigger_node){
-    //     Trigger * trigger_tmp = addTrigger(trigger_node);
-    //     new_item->add_trigger(trigger_tmp);
-    //     trigger_node = trigger_node->next_sibling("trigger");
-    // }
-
-    // //Add Trigger in container
-    // xml_node<char>* trigger_node = node->first_node("trigger");
-    // while(trigger_node){
-    //     Trigger * trigger_tmp = addTrigger(trigger_node);
-    //     new_container->add_trigger(trigger_tmp);
-    //     trigger_node = trigger_node->next_sibling("trigger");
-    // }
-
-
-    // //Add Trigger in creature
-    // xml_node<char>* trigger_node = node->first_node("trigger");
-    // while(trigger_node){
-    //     Trigger * trigger_tmp = addTrigger(trigger_node);
-    //     creature_tmp->add_trigger(trigger_tmp);
-    //     trigger_node = trigger_node->next_sibling("trigger");
-    // }
