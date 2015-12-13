@@ -209,6 +209,9 @@ Trigger * Room::room_check_trigger(list<Item*>* inventory, string command){
 
     list<Condition*>::iterator iter_cdt;
     Condition * condition_tmp;
+    string owner;
+    string object;
+
 
     list<Condition*> * condition_list_tmp_ptr;
     list<string> * action_list_tmp_ptr;
