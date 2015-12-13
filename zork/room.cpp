@@ -222,6 +222,7 @@ Trigger * Room::room_check_trigger(string command, list<Item*>* inventory, list<
 
     list<Item*>::iterator iter_it;
     Item * item_tmp;
+    list<Item *> * container_item_list_tmp;
 
 
     list<Container *>::iterator iter_cont;
@@ -268,7 +269,7 @@ Trigger * Room::room_check_trigger(string command, list<Item*>* inventory, list<
                                 return trigger_tmp;
                             }
                             else{
-                                break;
+                                return NULL;
                             }
                         }
                         if(condition_tmp->getHas() == "no"){
@@ -290,8 +291,45 @@ Trigger * Room::room_check_trigger(string command, list<Item*>* inventory, list<
                         container_tmp = (Container * ) * iter_cont;
 
                         // Detect the specific container
-                        if(container_tmp->getName() == object){
+                        if(container_tmp->getName() == owner){
 
+                            container_item_list_tmp = container_tmp->get_item_list_ptr();
+
+                            // Check if the object is in the item_list of the container
+                            for(iter_it = container_item_list_tmp->begin(); iter_it != container_item_list_tmp->end(); iter_it++){
+                                
+                                item_tmp = (Item *) * iter_it;
+
+                                if(item_tmp->getName() == object){
+                                    if(condition_tmp->getHas() == "yes"){
+                                    // If the trigger has right type,  single, permenent
+                                        if(trigger_tmp->getType() == "single"){
+                                            trigger_tmp->setType();
+                                        }
+                                        else if(trigger_tmp->getType() == "permanent"){
+                                        }
+                                        else{
+                                            return NULL;
+                                        }
+                                        return trigger_tmp;
+                                    }
+                                    else{
+                                        return NULL;
+                                    }
+                                }
+                            }
+                            if(condition_tmp->getHas() == "no"){
+                                // If the trigger has right type,  single, permenent
+                                if(trigger_tmp->getType() == "single"){
+                                    trigger_tmp->setType();
+                                }
+                                else if(trigger_tmp->getType() == "permanent"){
+                                }
+                                else{
+                                    return NULL;
+                                }
+                                return trigger_tmp;
+                            }
                         }
                     }
                 }
