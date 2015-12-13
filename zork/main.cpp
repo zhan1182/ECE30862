@@ -196,11 +196,11 @@ Condition* addCondition(const xml_node<char>* condition_node){
     if(condition_node->first_node("object"))
         object = condition_node->first_node("object")->value();
     if(condition_node->first_node("owner"))
-        object = condition_node->first_node("owner")->value();
+        owner = condition_node->first_node("owner")->value();
     if(condition_node->first_node("has"))
-        object = condition_node->first_node("has")->value();
+        has = condition_node->first_node("has")->value();
     if(condition_node->first_node("status"))
-        object = condition_node->first_node("status")->value();
+        status = condition_node->first_node("status")->value();
     return new Condition(object, owner, has, status);
 }
 
