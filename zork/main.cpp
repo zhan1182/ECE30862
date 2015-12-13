@@ -434,11 +434,15 @@ void attack_eval(const string command, list<Room*>* room_list, Room** currRoom,
     }
     if(creature->check_vul_with(item_str)){
         cout << "You assault the "+creature_str+" with "+item_str << endl;
-        cout << creature->getAttack()->get_print_message() << endl;
-            string command = creature->getAttack()->get_action();
-            while(command.compare("")){
-                parse_command(command, room_list, currRoom, inventory, root_node);
-                command = creature->getAttack()->get_action();
+        Attack * attack_tmp = creature->getAttack();
+        if(attack_tmp == NULL){
+        	return;
+        }
+		cout << attack_tmp->get_print_message() << endl;
+        string command = attack_tmp->get_action();
+        while(command.compare("")){
+        	parse_command(command, room_list, currRoom, inventory, root_node);
+        	command = attack_tmp->get_action();
         }
     }
 }
@@ -621,8 +625,9 @@ void open_eval(const string container_name, Room** currRoom){
 }
 void exec_trigger(Trigger* trigger, string command_str, list<Room*>* room_list, Room** currRoom,
                   list<Item*>* inventory, xml_node<char>* root_node){
-    if(!trigger.getPrint_Message().compare(""))
-        cout << getPrint_message() << endl;
+    if(!trigger->getPrint_Message().compare("")){
+        cout << trigger->getPrint_Message() << endl;
+    }
     
 
 }
