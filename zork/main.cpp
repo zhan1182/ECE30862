@@ -97,7 +97,7 @@ Trigger * addTrigger(const xml_node<char>* node){
 }
 
 
-Item* addItem(const xml_node<char>* node){
+Item* addItem(const xml_node<char>* node, Room* currRoom){
     if(node == NULL){
         cout << "item node is null" << endl;
         return NULL;
@@ -132,13 +132,14 @@ Item* addItem(const xml_node<char>* node){
     while(trigger_node){
         Trigger * trigger_tmp = addTrigger(trigger_node);
         new_item->add_trigger(trigger_tmp);
+        currRoom->add_trigger(trigger_tmp);
         trigger_node = trigger_node->next_sibling("trigger");
     }
 
     return new_item;
 }
 
-Container* addContainer(const xml_node<char>* container_node, const xml_node<char>* root_node){
+Container* addContainer(const xml_node<char>* container_node, const xml_node<char>* root_node, Room* currRoom){
     if(string(container_node->name()).compare("container")){
         cout << container_node->name() << endl;
         cout << "Type of node is not room" << endl;
@@ -163,7 +164,7 @@ Container* addContainer(const xml_node<char>* container_node, const xml_node<cha
     while(item_name_node){
         string item_name = item_name_node->value();
         new_container->add_item(addItem(breadth_search("item", item_name,
-                                                       root_node->first_node("item"))));
+                                                       root_node->first_node("item")), currRoom));
         item_name_node = item_name_node->next_sibling("item");
     }
     
@@ -180,6 +181,7 @@ Container* addContainer(const xml_node<char>* container_node, const xml_node<cha
     while(trigger_node){
         Trigger * trigger_tmp = addTrigger(trigger_node);
         new_container->add_trigger(trigger_tmp);
+        currRoom->add_trigger(trigger_tmp);
         trigger_node = trigger_node->next_sibling("trigger");
     }
 
@@ -221,7 +223,7 @@ Attack* addAttack(const xml_node<char>* attack_node){
     return attack_tmp;
 }
 
-Creature* addCreature(const xml_node<char>* creature_node){
+Creature* addCreature(const xml_node<char>* creature_node, Room* currRoom){
     string name = creature_node->first_node("name")->value();
     string description;
     string status;
@@ -288,7 +290,7 @@ Room* addRoom(const xml_node<char>* node, const xml_node<char>* root_node){
     xml_node<char>* item_name_node = node->first_node("item");
     while(item_name_node){
         string item_name = item_name_node->value();
-        new_room->add_item(addItem(breadth_search("item", item_name, root_node->first_node("item"))));
+        new_room->add_item(addItem(breadth_search("item", item_name, root_node->first_node("item")), new_room));
         item_name_node = item_name_node->next_sibling("item");
     }
 
@@ -299,7 +301,7 @@ Room* addRoom(const xml_node<char>* node, const xml_node<char>* root_node){
 
         Container * cont_tmp = addContainer(breadth_search("container", container_name,
                                                            root_node->first_node("container")),
-                                            root_node);
+                                            root_node, new_room);
 
         new_room->add_container(cont_tmp);
 
@@ -311,7 +313,7 @@ Room* addRoom(const xml_node<char>* node, const xml_node<char>* root_node){
     while(creature_name_node){
         string creature_name = creature_name_node->value();
         Creature * new_creature = addCreature(breadth_search("creature", creature_name, 
-                                                             root_node->first_node("creature")));
+                                                             root_node->first_node("creature")), new_room);
         new_room->add_creature(new_creature);
         creature_name_node = creature_name_node->next_sibling("creature");
     }
@@ -552,7 +554,7 @@ void delete_eval(string creature_str, Room** currRoom, list<Room*>* room_list){
     return;
 }
 
-void add_eval(string command, list<Room*>* room_list, xml_node<char>* root_node){
+void add_eval(string command, list<Room*>* room_list, xml_node<char>* root_node, Room** currRoom){
 
     string object_name = get_object_from_add(command);
     string room_name = get_room_from_add(command);
@@ -578,7 +580,7 @@ void add_eval(string command, list<Room*>* room_list, xml_node<char>* root_node)
             node_tag = node->name();
 
             if( node_tag == "creature"){
-                Creature * creature_tmp = addCreature(node);
+                Creature * creature_tmp = addCreature(node, *currRoom);
                 // Add this creature to the room
                 for(iter = room_list->begin(); iter != room_list->end(); iter++){
                     room_tmp = (Room *) *iter;
@@ -589,7 +591,7 @@ void add_eval(string command, list<Room*>* room_list, xml_node<char>* root_node)
                 }
             }
             else if(node_tag == "item"){
-                Item * item_tmp = addItem(node);
+                Item * item_tmp = addItem(node, *currRoom);
                 // Add this item to the room
                 for(iter = room_list->begin(); iter != room_list->end(); iter++){
                     room_tmp = (Room *) *iter;
@@ -689,7 +691,7 @@ void parse_command(string command_str, list<Room*>* room_list, Room** currRoom,
     }else if(!command_str.substr(0,6).compare("Delete")){
         delete_eval(command_str.substr(7, command_str.size()-7), currRoom, room_list);
     }else if(!command_str.substr(0,3).compare("Add")){
-        add_eval(command_str.substr(4, command_str.size()-4), room_list, root_node);
+        add_eval(command_str.substr(4, command_str.size()-4), room_list, root_node, currRoom);
     }else if(!command_str.compare("Game Over")){
         *currRoom = NULL;
         return;
