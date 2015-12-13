@@ -241,16 +241,6 @@ Trigger * Room::room_check_trigger(string command, list<Item*>* inventory, list<
             }
         }
 
-        // If the trigger has right type,  single, permenent
-        if(trigger_tmp->getType() == "single"){
-            trigger_tmp->setType();
-        }
-        else if(trigger_tmp->getType() == "permanent"){
-        }
-        else{
-            continue;
-        }
-
         // If the trigger meets the condition
         condition_list_tmp_ptr = trigger_tmp->get_condition_list_ptr();
         for(iter_cdt = condition_list_tmp_ptr->begin(); iter_cdt != condition_list_tmp_ptr->end(); iter_cdt++){
@@ -266,6 +256,15 @@ Trigger * Room::room_check_trigger(string command, list<Item*>* inventory, list<
                         item_tmp = (Item *) * iter_it;
                         if(item_tmp->getName() == object){
                             if(condition_tmp->getHas() == "yes"){
+                                // If the trigger has right type,  single, permenent
+                                if(trigger_tmp->getType() == "single"){
+                                    trigger_tmp->setType();
+                                }
+                                else if(trigger_tmp->getType() == "permanent"){
+                                }
+                                else{
+                                    return NULL;
+                                }
                                 return trigger_tmp;
                             }
                             else{
@@ -273,6 +272,15 @@ Trigger * Room::room_check_trigger(string command, list<Item*>* inventory, list<
                             }
                         }
                         if(condition_tmp->getHas() == "no"){
+                            // If the trigger has right type,  single, permenent
+                            if(trigger_tmp->getType() == "single"){
+                                trigger_tmp->setType();
+                            }
+                            else if(trigger_tmp->getType() == "permanent"){
+                            }
+                            else{
+                                return NULL;
+                            }
                             return trigger_tmp;
                         }
                     }
@@ -301,6 +309,15 @@ Trigger * Room::room_check_trigger(string command, list<Item*>* inventory, list<
                     if(container_tmp->getName() == object){
                         if(container_tmp->getStatus() == object_status){
                             // Find the triggered condition
+                            // If the trigger has right type,  single, permenent
+                            if(trigger_tmp->getType() == "single"){
+                                trigger_tmp->setType();
+                            }
+                            else if(trigger_tmp->getType() == "permanent"){
+                            }
+                            else{
+                                return NULL;
+                            }
                             return trigger_tmp;
                         }
                     }
@@ -313,6 +330,15 @@ Trigger * Room::room_check_trigger(string command, list<Item*>* inventory, list<
 
                     if(item_tmp->getName() == object){
                         if(item_tmp->getStatus() == object_status){
+                            // If the trigger has right type,  single, permenent
+                            if(trigger_tmp->getType() == "single"){
+                                trigger_tmp->setType();
+                            }
+                            else if(trigger_tmp->getType() == "permanent"){
+                            }
+                            else{
+                                return NULL;
+                            }
                             return trigger_tmp;
                         }
                     }
