@@ -214,6 +214,7 @@ Trigger * Room::room_check_trigger(string command, list<Item*>* inventory, list<
     Condition * condition_tmp;
     string owner;
     string object;
+    string object_status;
 
 
     list<Condition*> * condition_list_tmp_ptr;
@@ -282,15 +283,41 @@ Trigger * Room::room_check_trigger(string command, list<Item*>* inventory, list<
 
                         // Detect the specific container
                         if(container_tmp->getName() == object){
-                            
+
                         }
-
-
                     }
                 }
             }
             else{// HAS doesn't exist, status exist
                 // Check the status of a specific container or item in the room
+
+                object_status = condition_tmp->getStatus();
+
+                // Look for the container
+                for(iter_cont = room_container_list->begin(); iter_cont != room_container_list->end(); iter_cont++){
+                    container_tmp = (Container * ) * iter_cont;
+
+                    // Detect the specific container
+                    if(container_tmp->getName() == object){
+                        if(container_tmp->getStatus() == object_status){
+                            // Find the triggered condition
+                            return trigger_tmp;
+                        }
+                    }
+                }
+
+                // Look for items
+
+                for(iter_it = room_item_list->begin(); iter_it != room_item_list-> end(); iter_it++){
+                    item_tmp = (Item *) * iter_it;
+
+                    if(item_tmp->getName() == object){
+                        if(item_tmp->getStatus() == object_status){
+                            return trigger_tmp;
+                        }
+                    }
+                }
+
             }
         }
 
