@@ -106,7 +106,7 @@ Container* addContainer(const xml_node<char>* container_node, const xml_node<cha
         string item_name = item_name_node->value();
         new_container->add_item(addItem(breadth_search("item", item_name,
                                                        root_node->first_node("item"))));
-        item_name_node = item_name_node->next_sibling("name");
+        item_name_node = item_name_node->next_sibling("item");
     }
     
     //Add accpet
@@ -219,11 +219,23 @@ Room* addRoom(const xml_node<char>* node, const xml_node<char>* root_node){
     while(container_name_node){
         string container_name = container_name_node->value();
 
-        Container * cont_tmp = addContainer(breadth_search("container", container_name, root_node->first_node("container")), root_node);
+        Container * cont_tmp = addContainer(breadth_search("container", container_name,
+                                                           root_node->first_node("container")),
+                                            root_node);
 
         new_room->add_container(cont_tmp);
 
         container_name_node = container_name_node->next_sibling("container");
+    }
+
+    //Add creature
+    xml_node<char>* creature_name_node = node->first_node("creature");
+    while(creature_name_node){
+        string creature_name = creature_name_node->value();
+        Creature * new_creature = addCreature(breadth_search("creature", creature_name, 
+                                                             root_node->first_node("creature")));
+        new_room->add_creature(new_creature);
+        creature_name_node = creature_name_node->next_sibling("creature");
     }
     return new_room;
     
@@ -297,8 +309,56 @@ void drop_eval(const string item_name, Room** currRoom, list<Item*>* inventory){
     (*currRoom)->add_item(item);
     remove_inventory(item_name, inventory);
 }
+string get_creature_from_attack(const string command){
+    int i;
+    for(i = 0; i < command.size() - 1; ++i){
+        if(!command.substr(i, 4).compare("with"))
+            return command.substr(0, i-1);
 
-string get_name_from_command(const string command){
+    }
+    return string("");
+
+}
+
+string get_item_from_attack(const string command){
+    int i;
+    for(i = 0; i < command.size() - 1; ++i){
+        if(!command.substr(i, 4).compare("with"))
+            return command.substr(i+5, command.size());
+
+    }
+    return string("");
+}
+
+void attack_eval(const string command, list<Room*>* room_list, Room** currRoom,
+                 list<Item*>* inventory){
+    string creature_str = get_creature_from_attack(command);
+    string item_str = get_item_from_attack(command);
+    if(!creature_str.compare("") | !item_str.compare("")){
+        cout << "Error. Unknow attack command" << endl;
+    }
+    Item* item = search_inventory(inventory, item_str);
+    if(!item)
+        return;
+    Creature* creature = (*currRoom)->search_creature(creature_str);
+    if(!creature){
+        cout << "Error. Unknown creature." << endl;
+        return;
+    }
+    cout << "check vul "+item_str << endl;
+    cout << creature->check_vul_with(item_str) << endl;
+    if(creature->check_vul_with(item_str)){
+        cout << "You assault the "+creature_str+" with "+item_str << endl;
+        cout << creature->getAttack()->get_print_message() << endl;
+            string command = creature->getAttack()->get_action();
+            while(command.compare("")){
+                parse_command(command, room_list, currRoom, inventory);
+                command = creature->getAttack()->get_action();
+        }
+    }
+}
+
+string get_name_from_put(const string command){
     int i;
     for(i = 0; i < command.size() - 1; ++i){
         if(!command.substr(i, 2).compare("in"))
@@ -309,7 +369,7 @@ string get_name_from_command(const string command){
 
 }
 
-string get_container_from_command(const string command){
+string get_container_from_put(const string command){
     int i;
     for(i = 0; i < command.size() - 1; ++i){
         if(!command.substr(i, 2).compare("in"))
@@ -320,10 +380,10 @@ string get_container_from_command(const string command){
 }
 
 void put_eval(const string command, Room** currRoom, list<Item*>* inventory){
-    string item_name = get_name_from_command(command);
-    string container_name = get_container_from_command(command);
+    string item_name = get_name_from_put(command);
+    string container_name = get_container_from_put(command);
      if(!item_name.compare("") | !container_name.compare("")){
-        cout << "Put command error" << endl;
+        cout << "Error. Unknown command" << endl;
         return;
     }
     Item* item = search_inventory(inventory, item_name);
@@ -385,7 +445,8 @@ void open_eval(const string container_name, Room** currRoom){
     return;
 }
 
-void parse_command(string command_str, list<Room*>* room_list, Room** currRoom, list<Item*>* inventory){
+void parse_command(string command_str, list<Room*>* room_list, Room** currRoom,
+                   list<Item*>* inventory){
     if(!command_str.compare("n")){
         Room* nextRoom = searchRoomName(room_list, (*currRoom)->search_direction("north"));//Need search
         if(!nextRoom)
@@ -437,6 +498,8 @@ void parse_command(string command_str, list<Room*>* room_list, Room** currRoom, 
         put_eval(command_str.substr(4, command_str.size()-4), currRoom, inventory);
     }else if(!command_str.substr(0,4).compare("open")){
         open_eval(command_str.substr(5, command_str.size()-5), currRoom);
+    }else if(!command_str.substr(0,6).compare("attack")){
+        attack_eval(command_str.substr(7, command_str.size()-7), room_list, currRoom, inventory);
     }
 }
 
