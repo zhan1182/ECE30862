@@ -205,6 +205,11 @@ list<Item *> * Room::return_item_list(){
     return &item_list;
 }
 
+list<Trigger *> * Room::return_trigger_list(){
+    return &trigger_list;
+}
+
+
 Trigger * Room::room_check_trigger(string command, list<Item*>* inventory, list<Container*>* room_container_list, list<Item*> * room_item_list){
 
     list<Trigger*>::iterator iter;
@@ -244,18 +249,35 @@ Trigger * Room::room_check_trigger(string command, list<Item*>* inventory, list<
 
         // If the trigger meets the condition
         condition_list_tmp_ptr = trigger_tmp->get_condition_list_ptr();
+
         for(iter_cdt = condition_list_tmp_ptr->begin(); iter_cdt != condition_list_tmp_ptr->end(); iter_cdt++){
 
             condition_tmp = (Condition * ) *iter_cdt;
+
             owner = condition_tmp->getOwner();
             object = condition_tmp->getObject();
 
+            // cout << "HAS: " << condition_tmp->getHas() << endl;
+            // cout << "owner: " << condition_tmp->getOwner() << endl;
+            // cout << "object: " << condition_tmp->getObject() << endl;
+
             // Check if HAS exist
-            if(condition_tmp->has_exist()){
+            if(!condition_tmp->getHas().empty()){
+
+                // cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+
+
                 if(owner == "inventory"){// Check items in the invertory
+
+                    // cout << "????????????????????????????????" << endl;
+
+
                     for(iter_it = inventory->begin(); iter_it != inventory->end(); iter_it++){
                         item_tmp = (Item *) * iter_it;
                         if(item_tmp->getName() == object){
+
+                            cout << "Find object: " << item_tmp->getName()<< endl;
+
                             if(condition_tmp->getHas() == "yes"){
                                 // If the trigger has right type,  single, permenent
                                 if(trigger_tmp->getType() == "single"){
@@ -272,21 +294,27 @@ Trigger * Room::room_check_trigger(string command, list<Item*>* inventory, list<
                                 return NULL;
                             }
                         }
-                        if(condition_tmp->getHas() == "no"){
-                            // If the trigger has right type,  single, permenent
-                            if(trigger_tmp->getType() == "single"){
-                                trigger_tmp->setType();
-                            }
-                            else if(trigger_tmp->getType() == "permanent"){
-                            }
-                            else{
-                                return NULL;
-                            }
-                            return trigger_tmp;
+                    }
+                    // cout << "Not found anything !!!!"<< endl;
+
+                    if(condition_tmp->getHas() == "no"){
+                    // If the trigger has right type,  single, permenent
+                        if(trigger_tmp->getType() == "single"){
+                            trigger_tmp->setType();
                         }
+                        else if(trigger_tmp->getType() == "permanent"){
+
+                        }
+                        else{
+                            return NULL;
+                        }
+                        return trigger_tmp;
                     }
                 }
                 else{// Check a specific container
+
+                    // cout << "fffffffffffffffffffffffff" << endl;
+
                     for(iter_cont = room_container_list->begin(); iter_cont != room_container_list->end(); iter_cont++){
                         container_tmp = (Container * ) * iter_cont;
 
@@ -338,6 +366,9 @@ Trigger * Room::room_check_trigger(string command, list<Item*>* inventory, list<
             // Check all items in the inventory
             // Check the status of a specific container or item in the room
             else{
+
+                cout << "xxxxxxxxxxxxxxxxxxxxxxxxxx" << endl;
+
                 object_status = condition_tmp->getStatus();
 
                 // Look for items in the inventory

@@ -701,13 +701,22 @@ void parse_command(string command_str, list<Room*>* room_list, Room** currRoom,
 Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory, xml_node<char>* root_node){
     cout << currRoom->getDes() << endl;
     char input[256];
+
+    Trigger * trigger_tmp;
+
     while(currRoom){
         Room* nextRoom;
         cin.getline(input, 255);
         string input_str(input);
 
         // Check if a trigger happens
-
+        trigger_tmp = currRoom->room_check_trigger(input_str, inventory, currRoom->return_container_list(), currRoom->return_item_list());
+        if(trigger_tmp == NULL){
+        	cout << "NULL !!!!!!!!!!!!!!" << endl;
+        }
+        else{
+        	cout << trigger_tmp->getPrint_Message() << endl;
+        }
 
 
         parse_command(input_str, room_list, &currRoom, inventory, root_node);

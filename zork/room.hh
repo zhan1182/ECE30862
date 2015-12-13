@@ -64,7 +64,7 @@ public:
     // return list pointers
     list<Container *> * return_container_list();
     list<Item *> * return_item_list();
-
+    list<Trigger *> * return_trigger_list();
 
     // room check trigger
     Trigger * room_check_trigger(string command, list<Item*>* inventory, list<Container*>* room_container_list, list<Item*> * room_item_list);

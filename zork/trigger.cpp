@@ -51,56 +51,13 @@ list<string> * Trigger::get_action_list_ptr(){
 }
 
 
-// bool Trigger::trigger_check_condition(){
+        // cout << "Trigger number: " << currRoom->return_trigger_list()->size() << endl;
 
-// 	if(type == "used"){
-// 		return false;
-// 	}
-
-// 	if(type == "single"){
-// 		type = "used";
-// 	}
-
-// 	list<Condition*>::iterator iter;
-// 	Condition * condition_tmp;
-// 	string owner;
-// 	string object;
-
-// 	list<Item*>::iterator iter_it;
-// 	Item * item_tmp;
-
-// 	for(iter = condition_list.begin(); iter != condition_list.end(); iter++){
-// 		condition_tmp = (Condition *) *iter;
-// 		owner = condition_tmp->getOwner();
-// 		object = condition_tmp->getObject();
-
-// 		// The condition is HAS
-// 		if(condition_tmp->has_exist()){
-// 			if(owner == "inventory"){
-// 				for(iter_it = inventory->begin(); iter_it != inventory->end(); iter_it++){
-// 					item_tmp = (Item *) * iter_it;
-// 					if(item_tmp->getName() == object){
-// 						if(condition_tmp->getHas() == "yes"){
-// 							return true;
-// 						}
-// 					}
-// 				}
-// 				if(condition_tmp->getHas() == "no"){
-// 					return true;
-// 				}
-// 				else{
-// 					cout << "Error. Unknown Has type"<< endl;
-// 					return false;
-// 				}
-// 			}
-// 			else{
-
-// 			}
-// 		}
-// 		else{ // The condition is Status
-
-// 		}
-// 	}
-
-// 	return false;
-// }
+        // // Check if a trigger happens
+        // trigger_tmp = currRoom->room_check_trigger(input_str, inventory, currRoom->return_container_list(), currRoom->return_item_list());
+        // if(trigger_tmp == NULL){
+        // 	cout << "NULL !!!!!!!!!!!!!!" << endl;
+        // }
+        // else{
+        // 	cout << trigger_tmp->getPrint_Message() << endl;
+        // }
