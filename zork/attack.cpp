@@ -25,5 +25,6 @@ string Attack::get_print_message(){
 }
 
 string Attack::get_action(){
-	return action_list.pop_front();
+	string return_str = (string) action_list.pop_front();
+	return return_str;
 }
