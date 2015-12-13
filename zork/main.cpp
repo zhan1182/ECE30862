@@ -237,7 +237,7 @@ void print_inventory(list<Item*>* inventory){
         return;
     }
     bool first = true;
-    cout << "Inventory: " << endl;
+    cout << "Inventory: ";
     while(iter != inventory->end()){
         Item* item = (Item*) *iter;
         if(first){
@@ -248,7 +248,7 @@ void print_inventory(list<Item*>* inventory){
         }
         iter++;
     }
-    cout << endl;
+    cout <<endl;
 }
 Item* search_inventory(list<Item*>* inventory, const string item_name){
     list<Item*>::iterator iter = inventory->begin();
@@ -283,7 +283,7 @@ void take_eval(const string item_name, Room** currRoom, list<Item*>* inventory){
         return;
     }
     inventory->push_back(item);
-    cout << "Item "+item->getName()+" added to inventory" << endl;
+    cout << "Item "+item->getName()+" added to inventory." << endl;
 
 }
 
@@ -322,9 +322,7 @@ string get_container_from_command(const string command){
 void put_eval(const string command, Room** currRoom, list<Item*>* inventory){
     string item_name = get_name_from_command(command);
     string container_name = get_container_from_command(command);
-    cout << "Item name is "+item_name << endl;
-    cout << "Container name is "+container_name << endl;
-    if(!item_name.compare("") | !container_name.compare("")){
+     if(!item_name.compare("") | !container_name.compare("")){
         cout << "Put command error" << endl;
         return;
     }
@@ -339,7 +337,7 @@ void put_eval(const string command, Room** currRoom, list<Item*>* inventory){
     if(container->look_acceptance_by_item_name(item_name)){
         remove_inventory(item_name, inventory);
         container->add_item(item);
-        cout << "Item "+item_name+" added to "+ container_name << endl;
+        cout << "Item "+item_name+" added to "+ container_name+"." << endl;
         return;
     }
     cout << "Error. Cannot put in container" << endl;
