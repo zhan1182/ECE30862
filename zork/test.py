@@ -28,10 +28,10 @@ def _test_exe(test_case):
 
 def test_all():
 	
-	test_list = ["room", "item", "container"]
+	test_list = ["room", "item", "container", "creature"]
 
 	for test_case in test_list:
-		_test_(test_case)
+		_test_exe(test_case)
 
 def test_room():
 	_test_exe("room")
@@ -44,6 +44,9 @@ def test_item():
 def test_container():
 	_test_exe("container")
 
+def test_creature():
+	_test_exe("creature")
+
 def _test_(test_case):
 	
 	if test_case == "item":
@@ -52,6 +55,8 @@ def _test_(test_case):
 		test_room()
 	elif test_case == "container": 
 		test_container()
+	elif test_case == "creature":
+		test_creature()
 	else:
 		print("Test Case not recgonized")
 
