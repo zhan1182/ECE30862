@@ -14,7 +14,7 @@ using namespace std;
 
 class Item : public Base
 {
-    list<Trigger * > trigger_list;
+    list<Trigger*> trigger_list;
     string writing;
     Turnon* turnon;
 public:

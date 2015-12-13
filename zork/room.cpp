@@ -202,16 +202,80 @@ list<Container *> * Room::return_container_list(){
 }
 
 
-Trigger * Room::room_check_trigger(list<Item*>* inventory){
+Trigger * Room::room_check_trigger(list<Item*>* inventory, string command){
+
     list<Trigger*>::iterator iter;
     Trigger * trigger_tmp;
+
+    list<Condition*>::iterator iter_cdt;
+    Condition * condition_tmp;
+
+    list<Condition*> * condition_list_tmp_ptr;
+    list<string> * action_list_tmp_ptr;
+
+    list<Item*>::iterator iter_it;
+    Item * item_tmp;
+
+
+    // int satisfy = 1;
+
     for (iter = trigger_list.begin(); iter != trigger_list.end(); iter++){
-        // If trigger 
-        if(trigger_tmp->trigger_check_condition()){
-            // Trigger print
-            cout << trigger_tmp.getPrint_Message() << endl;
-            return trigger_tmp;
+
+        trigger_tmp = (Trigger * ) * iter;
+
+        // If a command is accepted
+        if(trigger_tmp->getCommand() != ""){
+            if(trigger_tmp->getCommand() != command){
+                continue;
+            }
         }
+
+        // If the trigger has right type,  single, permenent
+        if(trigger_tmp->getType() == "single"){
+            trigger_tmp->setType();
+        }
+        else if(trigger_tmp->getType() == "permanent"){
+        }
+        else{
+            continue;
+        }
+
+        // If the trigger meets the condition
+        condition_list_tmp_ptr = trigger_tmp->get_condition_list_ptr();
+        for(iter_cdt = condition_list_tmp_ptr->begin(); iter_cdt != condition_list_tmp_ptr->end(); iter_cdt++){
+
+            condition_tmp = (Condition * ) *iter_cdt;
+            owner = condition_tmp->getOwner();
+            object = condition_tmp->getObject();
+
+            // Check if HAS exist
+            if(condition_tmp->has_exist()){
+                if(owner == "inventory"){// Check items in the invertory
+                    for(iter_it = inventory->begin(); iter_it != inventory->end(); iter_it++){
+                        item_tmp = (Item *) * iter_it;
+                        if(item_tmp->getName() == object){
+                            if(condition_tmp->getHas() == "yes"){
+                                return trigger_tmp;
+                            }
+                            else{
+                                break;
+                            }
+                        }
+                        if(condition_tmp->getHas() == "no"){
+                            return trigger_tmp;
+                        }
+                    }
+                }
+                else{// Check a specific container
+
+                }
+            }
+            else{// HAS doesn't exist, status exist
+                // Check the status of a specific container or item in the room
+            }
+        }
+
+
     }
     return NULL;
 

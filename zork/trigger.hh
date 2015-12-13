@@ -8,7 +8,7 @@
 #include <list>
 
 #include "condition.hh"
-#include "item.hh"
+// #include "item.hh"
 
 class Trigger
 {
@@ -30,14 +30,16 @@ public:
 	string getPrint_Message();
 	string getCommand();
 
-	void setType();
+	list<Condition *> * get_condition_list_ptr();
+	list<string> * get_action_list_ptr();
 
+	void setType();
 
 	void add_action(string Action);
 	void add_condition(Condition * cdt_ptr);
 
 	// Check condition
-	bool trigger_check_condition(list<Item*>* inventory);
+	// bool trigger_check_condition();
 
 };
 

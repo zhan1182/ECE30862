@@ -45,7 +45,7 @@ void Condition::setStatus(string Status){
 
 
 bool Condition::has_exist(){
-	if(has){
+	if(has != ""){
 		return true;
 	}
 	return false;

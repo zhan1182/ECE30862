@@ -18,7 +18,7 @@ Creature* addCreature(const xml_node<char>* creature_node);
 string get_room_from_add(const string command){
     int i;
     for(i = 0; i < command.size() - 1; ++i){
-        if(!command.substr(i, 4).compare("to")){
+        if(!command.substr(i, 2).compare("to")){
             return command.substr(i+3, command.size());
         }
 
