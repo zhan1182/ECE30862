@@ -41,3 +41,12 @@ void Condition::setHas(string Has){
 void Condition::setStatus(string Status){
 	status = Status;
 }
+
+
+
+bool Condition::has_exist(){
+	if(has){
+		return true;
+	}
+	return false;
+}

@@ -63,6 +63,10 @@ public:
 
     // return list pointers
     list<Container *> * return_container_list();
+
+
+    // room check trigger
+    void room_check_trigger(list<Item*>* inventory);
 };
 
 #endif

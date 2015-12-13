@@ -28,7 +28,7 @@ public:
 	void setHas(string Has);
 	void setStatus(string Status);
 
-
+	bool has_exist();
 
 };
 
