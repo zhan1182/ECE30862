@@ -33,7 +33,7 @@ void Condition::setObject(string Object){
 	object = Object;
 }
 void Condition::setOwner(string Owner){
-	owener = Owner;
+	owner = Owner;
 }
 void Condition::setHas(string Has){
 	has = Has;
