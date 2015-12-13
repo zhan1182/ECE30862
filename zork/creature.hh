@@ -31,6 +31,10 @@ public:
 	// check vul
 	bool check_vul(list<Item*> * inventory);
 	bool check_vul_with(string weapon);
+
+
+	// check trigger
+	Trigger * creature_check_trigger();
 };
 
 #endif

@@ -296,10 +296,32 @@ Trigger * Room::room_check_trigger(string command, list<Item*>* inventory, list<
                     }
                 }
             }
-            else{// HAS doesn't exist, status exist
-                // Check the status of a specific container or item in the room
-
+            // HAS doesn't exist, status exist
+            // Check all items in the inventory
+            // Check the status of a specific container or item in the room
+            else{
                 object_status = condition_tmp->getStatus();
+
+                // Look for items in the inventory
+                for(iter_it = inventory->begin(); iter_it != inventory->end(); iter_it++){
+
+                    item_tmp = (Item *) * iter_it;
+
+                    if(item_tmp->getName() == object){
+                        if(item_tmp->getStatus() == object_status){
+                            if(trigger_tmp->getType() == "single"){
+                                trigger_tmp->setType();
+                            }
+                            else if(trigger_tmp->getType() == "permanent"){
+                            }
+                            else{
+                                return NULL;
+                            }
+                            return trigger_tmp;
+                        }
+                    }
+                }
+
 
                 // Look for the container
                 for(iter_cont = room_container_list->begin(); iter_cont != room_container_list->end(); iter_cont++){
