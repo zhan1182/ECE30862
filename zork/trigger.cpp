@@ -3,8 +3,8 @@ using namespace std;
 
 #include "trigger.hh"
 
-Trigger::Trigger(Condition CDT, string Type, string Action, string ToString, string Command):
-cdt(CDT), type(Type), action(Action), toString(ToString), command(Command)
+Trigger::Trigger(string Type, string Command, string Print_Message):
+type(Type), command(Command), print_message(Print_Message)
 {
 }
 
@@ -14,25 +14,27 @@ Trigger::~Trigger()
 
 void Trigger::print()
 {
-	cout << "Object: " << cdt.getObject() << endl;
-	cout << "Status: " << cdt.getStatus() << endl;
-	cout << "Action: " << action << endl;
-	cout << "Print: " << toString << endl;
+	cout << "Type: " << type << endl;
 	cout << "Command: " << command << endl;
+	cout << "Print: " << print_message << endl;
 }
 
 string Trigger::getType(){
 	return type;
 }
 
-string Trigger::getAction(){
-	return action;
-}
-
-string Trigger::getToString(){
-	return toString;
+string Trigger::getPrint_Message(){
+	return print_message;
 }
 
 string Trigger::getCommand(){
 	return command;
+}
+
+void Trigger::add_action(string Action){
+	action_list.push_back(Action);
+}
+
+void Trigger::add_condition(Condition * cdt_ptr){
+	condition_list.push_back(cdt_ptr);
 }

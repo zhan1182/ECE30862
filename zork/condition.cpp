@@ -27,3 +27,17 @@ string Condition::getHas(){
 string Condition::getStatus(){
 	return status;
 }
+
+
+void Condition::setObject(string Object){
+	object = Object;
+}
+void Condition::setOwner(string Owner){
+	owener = Owner;
+}
+void Condition::setHas(string Has){
+	has = Has;
+}
+void Condition::setStatus(string Status){
+	status = Status;
+}

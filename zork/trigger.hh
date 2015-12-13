@@ -5,26 +5,31 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string>
+#include <list>
 
 #include "condition.hh"
 
 class Trigger
 {
-	Condition cdt;
+	// default type = single, unless specify type as permernent
 	string type;
-	string action;
-	string toString;
+
 	string command;
+	string print_message;
+
+	list<Condition *> condition_list;
+	list<string> action_list;
+	
 public:
-	Trigger(Condition CDT, string Type, string Action, string ToString, string Command);
+	Trigger(string Type, string Command, string Print_Message);
 	virtual ~Trigger();
 	virtual void print();
 
 	string getType();
-	string getAction();
-	string getToString();
+	string getPrint_Message();
 	string getCommand();
-	
+	void add_action(string Action);
+	void add_condition(Condition * cdt_ptr);
 };
 
 

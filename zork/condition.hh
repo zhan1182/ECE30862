@@ -22,6 +22,14 @@ public:
 	string getOwner();
 	string getHas();
 	string getStatus();
+
+	void setObject(string Object);
+	void setOwner(string Owner);
+	void setHas(string Has);
+	void setStatus(string Status);
+
+
+
 };
 
 #endif
