@@ -104,7 +104,6 @@ Container* addContainer(const xml_node<char>* container_node, const xml_node<cha
     xml_node<char>* item_name_node = container_node->first_node("item");
     while(item_name_node){
         string item_name = item_name_node->value();
-        cout << item_name << endl;
         new_container->add_item(addItem(breadth_search("item", item_name,
                                                        root_node->first_node("item"))));
         item_name_node = item_name_node->next_sibling("name");
@@ -278,7 +277,6 @@ void remove_inventory(const string item_name, list<Item*>* inventory){
     }
 }
 void take_eval(const string item_name, Room** currRoom, list<Item*>* inventory){
-    cout << item_name << endl;
     Item* item = (*currRoom)->get_item(item_name);
     if(!item){
         cout << "Error, item is not found" << endl;
@@ -381,7 +379,7 @@ void open_eval(const string container_name, Room** currRoom){
     Container* container = (*currRoom)->search_container(container_name);
     if(container){
         container->open_print();
-        if(container->getStatus().compare("unopened"))
+        if(!container->getStatus().compare("unopened"))
             container->changeStatus("opened");
         return;
     }
@@ -439,6 +437,8 @@ void parse_command(string command_str, list<Room*>* room_list, Room** currRoom, 
         read_eval(command_str.substr(5, command_str.size()-5), inventory);
     }else if(!command_str.substr(0,3).compare("put")){
         put_eval(command_str.substr(4, command_str.size()-4), currRoom, inventory);
+    }else if(!command_str.substr(0,4).compare("open")){
+        open_eval(command_str.substr(5, command_str.size()-5), currRoom);
     }
 }
 
