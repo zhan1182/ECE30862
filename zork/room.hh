@@ -67,7 +67,7 @@ public:
 
 
     // room check trigger
-    Trigger * room_check_trigger(list<Item*>* inventory, string command);
+    Trigger * room_check_trigger(string command, list<Item*>* inventory, list<Container*>* room_container_list, list<Item*> * room_item_list);
 };
 
 #endif

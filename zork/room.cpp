@@ -205,7 +205,7 @@ list<Item *> * Room::return_item_list(){
     return &item_list;
 }
 
-Trigger * Room::room_check_trigger(list<Item*>* inventory, string command){
+Trigger * Room::room_check_trigger(string command, list<Item*>* inventory, list<Container*>* room_container_list, list<Item*> * room_item_list){
 
     list<Trigger*>::iterator iter;
     Trigger * trigger_tmp;
@@ -221,6 +221,10 @@ Trigger * Room::room_check_trigger(list<Item*>* inventory, string command){
 
     list<Item*>::iterator iter_it;
     Item * item_tmp;
+
+
+    list<Container *>::iterator iter_cont;
+    Container * container_tmp;
 
 
     // int satisfy = 1;
@@ -273,7 +277,16 @@ Trigger * Room::room_check_trigger(list<Item*>* inventory, string command){
                     }
                 }
                 else{// Check a specific container
+                    for(iter_cont = room_container_list->begin(); iter_cont != room_container_list->end(); iter_cont++){
+                        container_tmp = (Container * ) * iter_cont;
 
+                        // Detect the specific container
+                        if(container_tmp->getName() == object){
+                            
+                        }
+
+
+                    }
                 }
             }
             else{// HAS doesn't exist, status exist
