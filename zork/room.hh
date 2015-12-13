@@ -66,7 +66,7 @@ public:
 
 
     // room check trigger
-    void room_check_trigger(list<Item*>* inventory);
+    bool room_check_trigger(list<Item*>* inventory);
 };
 
 #endif

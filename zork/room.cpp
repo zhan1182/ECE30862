@@ -202,7 +202,7 @@ list<Container *> * Room::return_container_list(){
 }
 
 
-void Room::room_check_trigger(list<Item*>* inventory){
+bool Room::room_check_trigger(list<Item*>* inventory){
     list<Trigger*>::iterator iter;
     Trigger * trigger_tmp;
     for (iter = trigger_list.begin(); iter != trigger_list.end(); iter++){
@@ -210,11 +210,12 @@ void Room::room_check_trigger(list<Item*>* inventory){
         if(trigger_tmp->trigger_check_condition){
             // Trigger print
             cout << trigger_tmp.getPrint_Message << endl;
-
+            return true;
             // Trigger action
+            
         }
     }
-
+    return false;
 
 }
 
