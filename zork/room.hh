@@ -63,6 +63,7 @@ public:
 
     // return list pointers
     list<Container *> * return_container_list();
+    list<Item *> * return_item_list();
 
 
     // room check trigger

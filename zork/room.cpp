@@ -201,6 +201,9 @@ list<Container *> * Room::return_container_list(){
     return &container_list;
 }
 
+list<Item *> * Room::return_item_list(){
+    return &item_list;
+}
 
 Trigger * Room::room_check_trigger(list<Item*>* inventory, string command){
 
