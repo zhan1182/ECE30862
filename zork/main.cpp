@@ -15,7 +15,7 @@ using namespace rapidxml;
 
 Condition* addCondition(const xml_node<char>* condition_node);
 
-void parse_command(string command_str, list<Room*>* room_list, Room** currRoom, list<Item*>* inventory);
+void parse_command(string command_str, list<Room*>* room_list, Room** currRoom, list<Item*>* inventory, xml_node<char>* root_node);
 /* Note:
    Default destructor may case memory leak??
    Map files contain status??
@@ -419,7 +419,7 @@ string get_item_from_attack(const string command){
 }
 
 void attack_eval(const string command, list<Room*>* room_list, Room** currRoom,
-                 list<Item*>* inventory){
+                 list<Item*>* inventory, xml_node<char>* root_node){
     string creature_str = get_creature_from_attack(command);
     string item_str = get_item_from_attack(command);
     if(!creature_str.compare("") | !item_str.compare("")){
@@ -433,14 +433,12 @@ void attack_eval(const string command, list<Room*>* room_list, Room** currRoom,
         cout << "Error. Unknown creature." << endl;
         return;
     }
-    cout << "check vul "+item_str << endl;
-    cout << creature->check_vul_with(item_str) << endl;
     if(creature->check_vul_with(item_str)){
         cout << "You assault the "+creature_str+" with "+item_str << endl;
         cout << creature->getAttack()->get_print_message() << endl;
             string command = creature->getAttack()->get_action();
             while(command.compare("")){
-                parse_command(command, room_list, currRoom, inventory);
+                parse_command(command, room_list, currRoom, inventory, root_node);
                 command = creature->getAttack()->get_action();
         }
     }
@@ -504,7 +502,7 @@ void read_eval(const string item_name, list<Item*>* inventory){
     cout << item->getWriting() << endl;
 }
 
-void turnon_eval(const string item_name, list<Room*>* room_list, Room** currRoom, list<Item*>* inventory){
+void turnon_eval(const string item_name, list<Room*>* room_list, Room** currRoom, list<Item*>* inventory, xml_node<char>* root_node){
     cout << "You activate the "+item_name+"." << endl;
     Item* item = search_inventory(inventory, item_name);
     if(!item){
@@ -516,11 +514,101 @@ void turnon_eval(const string item_name, list<Room*>* room_list, Room** currRoom
         return;
     }
     cout << item->get_turnon()->getToString() << endl;
-    if(item->get_turnon()->getAction().compare(""))
-        
-        parse_command(item->get_turnon()->getAction(), room_list, currRoom, inventory);
+    if(item->get_turnon()->getAction().compare(""))        
+        parse_command(item->get_turnon()->getAction(), room_list, currRoom, inventory, root_node);
 
 }
+
+string get_room_from_add(const string command){
+    int i;
+    for(i = 0; i < command.size() - 1; ++i){
+        if(!command.substr(i, 2).compare("to")){
+            return command.substr(i+3, command.size());
+        }
+
+    }
+    return string("");
+}
+
+string get_object_from_add(const string command){
+    int i;
+    for(i = 0; i < command.size() - 1; ++i){
+        if(!command.substr(i, 2).compare("to")){
+            return command.substr(0, i - 1);
+        }
+    }
+    return string("");
+}
+void delete_eval(string creature_str, Room** currRoom, list<Room*>* room_list){
+    list<Room*>::iterator iter = room_list->begin();
+    while(iter != room_list->end()){
+        Room* room = (Room*) *iter;
+        Creature* creature = room->get_creature(creature_str);
+        iter++;
+    }
+    return;
+}
+
+void add_eval(string command, list<Room*>* room_list, xml_node<char>* root_node){
+
+    string object_name = get_object_from_add(command);
+    string room_name = get_room_from_add(command);
+
+    if(!object_name.compare("") | !room_name.compare("")){
+        cout << "Error. Unknown command" << endl;
+        return;
+    }
+
+    xml_node<char>* node = root_node;
+    string node_name;
+    string node_tag;
+
+    list<Room*>::iterator iter;
+    Room * room_tmp;
+
+    while(node){
+
+    	node_name = node->first_node("name")->value();
+
+    	if(object_name == node_name){
+
+            node_tag = node->name();
+
+            if( node_tag == "creature"){
+                Creature * creature_tmp = addCreature(node);
+                // Add this creature to the room
+                for(iter = room_list->begin(); iter != room_list->end(); iter++){
+                    room_tmp = (Room *) *iter;
+                    if(room_tmp->getName() == room_name){
+                        // Add the creature here
+                        room_tmp->add_creature(creature_tmp);
+                    }
+                }
+            }
+            else if(node_tag == "item"){
+                Item * item_tmp = addItem(node);
+                // Add this item to the room
+                for(iter = room_list->begin(); iter != room_list->end(); iter++){
+                    room_tmp = (Room *) *iter;
+                    if(room_tmp->getName() == room_name){
+                        // Add the creature here
+                        room_tmp->add_item(item_tmp);
+                    }
+                }
+            }
+            else{
+                cout << "Error. Unknown object" << endl;
+            }
+            return;
+    	}
+        node = node->next_sibling();
+    }
+
+    cout << "Error. object not found" << endl;
+
+    return;
+}
+
 void open_eval(const string container_name, Room** currRoom){
     Container* container = (*currRoom)->search_container(container_name);
     if(container){
@@ -534,7 +622,7 @@ void open_eval(const string container_name, Room** currRoom){
 }
 
 void parse_command(string command_str, list<Room*>* room_list, Room** currRoom,
-                   list<Item*>* inventory){
+                   list<Item*>* inventory, xml_node<char>* root_node){
     if(!command_str.compare("n")){
         Room* nextRoom = searchRoomName(room_list, (*currRoom)->search_direction("north"));//Need search
         if(!nextRoom)
@@ -575,7 +663,7 @@ void parse_command(string command_str, list<Room*>* room_list, Room** currRoom,
         else
             cout << "Cannot Exit!" << endl;
     }else if(!command_str.substr(0,7).compare("turn on")){
-        turnon_eval(command_str.substr(8, command_str.size()-8), room_list, currRoom, inventory);
+        turnon_eval(command_str.substr(8, command_str.size()-8), room_list, currRoom, inventory, root_node);
     }else if(!command_str.substr(0,4).compare("drop")){
         drop_eval(command_str.substr(5, command_str.size()-5), currRoom, inventory);
     }else if(!command_str.substr(0,4).compare("take")){
@@ -587,18 +675,25 @@ void parse_command(string command_str, list<Room*>* room_list, Room** currRoom,
     }else if(!command_str.substr(0,4).compare("open")){
         open_eval(command_str.substr(5, command_str.size()-5), currRoom);
     }else if(!command_str.substr(0,6).compare("attack")){
-        attack_eval(command_str.substr(7, command_str.size()-7), room_list, currRoom, inventory);
+        attack_eval(command_str.substr(7, command_str.size()-7), room_list, currRoom, inventory, root_node);
+    }else if(!command_str.substr(0,6).compare("Delete")){
+        delete_eval(command_str.substr(7, command_str.size()-7), currRoom, room_list);
+    }else if(!command_str.substr(0,3).compare("Add")){
+        add_eval(command_str.substr(4, command_str.size()-4), room_list, root_node);
+    }else if(!command_str.compare("Game Over")){
+        *currRoom = NULL;
+        return;
     }
 }
 
-Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory){
+Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory, xml_node<char>* root_node){
     cout << currRoom->getDes() << endl;
     char input[256];
     while(currRoom){
         Room* nextRoom;
         cin.getline(input, 255);
         string input_str(input);
-        parse_command(input_str, room_list, &currRoom, inventory);
+        parse_command(input_str, room_list, &currRoom, inventory, root_node);
     }
 }
 
@@ -627,7 +722,7 @@ int main(int argc, char ** argv)
     list<Item*> inventory;
     Room* currRoom = searchRoomName(&room_list, "Entrance");
     while(currRoom){
-        Room* nextRoom = enterRoom(&room_list, currRoom, &inventory);
+        Room* nextRoom = enterRoom(&room_list, currRoom, &inventory, doc.first_node()->first_node());
         currRoom = nextRoom;
     }
     cout << "Game Over" << endl;
