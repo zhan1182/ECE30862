@@ -12,6 +12,9 @@
 using namespace std;
 using namespace rapidxml;
 
+
+Condition* addCondition(const xml_node<char>* condition_node);
+
 void parse_command(string command_str, list<Room*>* room_list, Room** currRoom, list<Item*>* inventory);
 /* Note:
    Default destructor may case memory leak??
@@ -173,7 +176,7 @@ Container* addContainer(const xml_node<char>* container_node, const xml_node<cha
     }
 
     //Add Trigger in container
-    xml_node<char>* trigger_node = node->first_node("trigger");
+    xml_node<char>* trigger_node = container_node->first_node("trigger");
     while(trigger_node){
         Trigger * trigger_tmp = addTrigger(trigger_node);
         new_container->add_trigger(trigger_tmp);
@@ -239,7 +242,7 @@ Creature* addCreature(const xml_node<char>* creature_node){
     }
 
     //Add Trigger in creature
-    xml_node<char>* trigger_node = node->first_node("trigger");
+    xml_node<char>* trigger_node = creature_node->first_node("trigger");
     while(trigger_node){
         Trigger * trigger_tmp = addTrigger(trigger_node);
         creature_tmp->add_trigger(trigger_tmp);
