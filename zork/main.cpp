@@ -703,6 +703,11 @@ Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory, 
         Room* nextRoom;
         cin.getline(input, 255);
         string input_str(input);
+
+        // Check if a trigger happens
+
+
+
         parse_command(input_str, room_list, &currRoom, inventory, root_node);
     }
 }
