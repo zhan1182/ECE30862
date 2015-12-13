@@ -2,11 +2,16 @@
 #include <string>
 #include <list>
 
+#include "rapidxml/rapidxml.hpp"
 #include "trigger.hh"
+#include "condition.hh"
+
 
 using namespace std;
 
 using namespace rapidxml;
+
+Condition* addCondition(const xml_node<char>* condition_node);
 
 
 Trigger * addTrigger(const xml_node<char>* node){
@@ -38,11 +43,17 @@ Trigger * addTrigger(const xml_node<char>* node){
 
     // add actions
     xml_node<char>* action_node = node->first_node("action");
-    while(accept_node){
+    while(action_node){
         new_trigger->add_action(action_node->value());
         action_node = action_node->next_sibling("action");
     }
 
+    // add condition
+    xml_node<char>* condition_node = node->first_node("condition");
+    while(condition_node){
+        new_trigger->add_condition(addCondition(condition_node));
+        condition_node = condition_node->next_sibling("condition");
+    }
 
     return new_trigger;
 }
