@@ -78,7 +78,7 @@ bool Creature::check_vul_with(string weapon){
 
 Trigger * creature_check_trigger(){
 
-	
+
 
 	return NULL;
 }
