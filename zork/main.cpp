@@ -632,7 +632,7 @@ void open_eval(const string container_name, Room** currRoom){
             container->changeStatus("opened");
         return;
     }
-    cout << "Container "+container_name+" does nbot exist." << endl;
+    cout << "Container "+container_name+" does not exist." << endl;
     return;
 }
 Base* find_base_in_room(Room* room, const string item_name){
