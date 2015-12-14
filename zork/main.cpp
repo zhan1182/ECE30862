@@ -756,12 +756,20 @@ Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory, 
         string input_str(input);
 
         // Check if a trigger happens
-        trigger_tmp = currRoom->room_check_trigger(input_str, inventory, currRoom->return_container_list(), currRoom->return_item_list());
+        trigger_tmp = currRoom->room_check_trigger(input_str, inventory, currRoom->return_container_list(),
+                                                   currRoom->return_item_list());
         if(trigger_tmp == NULL){
-        	cout << "NULL !!!!!!!!!!!!!!" << endl;
+            cout << "NULL !!!!!!!!!!!!!!" << endl;
         }
         else{
-        	cout << trigger_tmp->getPrint_Message() << endl;
+            cout << trigger_tmp->getPrint_Message() << endl;
+            list<string>* action_list = trigger_tmp->get_action_list_ptr();
+            list<string>::iterator iter = action_list->begin();
+            while(iter != action_list->end()){
+                string command = (string) *iter;
+                parse_command(command, room_list, &currRoom, inventory, root_node);
+                iter++;
+            }
         }
 
 
