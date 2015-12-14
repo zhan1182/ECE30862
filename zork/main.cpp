@@ -626,15 +626,45 @@ void open_eval(const string container_name, Room** currRoom){
     cout << "Container "+container_name+" does nbot exist." << endl;
     return;
 }
-// Base* find_item(list<Room*>* room_list, list<Item*>* inventory){
-//     Base* base = 
-//     return NULL
-// }
-void update_eval(const string command){
+Base* find_base_in_room(Room* room, const string item_name){
+    Base* base = (Base*) room->search_item(item_name);
+    if(base != NULL)
+        return base;
+
+    base = (Base*) room->search_creature(item_name);
+    if(base != NULL)
+        return base; 
+    return NULL;
+    
+    
+}
+Base* find_base(list<Room*>* room_list, list<Item*>* inventory, const string item_name){
+    Base* base = (Base*) search_inventory(inventory, item_name);
+    if(base != NULL)
+        return base;
+    list<Room*>::iterator iter = room_list->begin();
+    while(iter != room_list->end()){
+        Room* room_tmp = (Room*) *iter;
+        base = find_base_in_room(room_tmp, item_name);
+        if(base != NULL)
+            return base;
+        iter++;
+    }
+    return NULL;
+}
+
+void update_eval(const string command, list<Room*>* room_list, list<Item*>* inventory){
     string item = get_object_from_add(command);
     string status = get_room_from_add(command);
+    Base* base = find_base(room_list, inventory, item);
     
-
+    if(base == NULL){
+        cout << "Error, "+item+" not found" << endl;
+        return;
+    }
+    base->changeStatus(status);
+    cout << item +"updated to "+status << endl;
+    
 }
 
 void exec_trigger(Trigger* trigger, string command_str, list<Room*>* room_list, Room** currRoom,
@@ -703,9 +733,9 @@ void parse_command(string command_str, list<Room*>* room_list, Room** currRoom,
     }else if(!command_str.substr(0,6).compare("Delete")){
         delete_eval(command_str.substr(7, command_str.size()-7), currRoom, room_list);
     }
-// else if(!command_str.substr(0,6).compare("Update")){
-//    //      update_eval(command_str.substr(7, command_str.size()-7), currRoom, room_list);
-    // } 
+    else if(!command_str.substr(0,6).compare("Update")){
+        update_eval(command_str.substr(7, command_str.size()-7), room_list, inventory);
+    } 
     else if(!command_str.substr(0,3).compare("Add")){
         add_eval(command_str.substr(4, command_str.size()-4), room_list, root_node, currRoom);
     }else if(!command_str.compare("Game Over")){
