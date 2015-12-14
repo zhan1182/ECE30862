@@ -196,6 +196,57 @@ Creature * Room::search_creature(string cr_name){
     return NULL;
 }
 
+
+Item * Room::search_item(string item_name){
+        // Iters
+    list<Item*>::iterator iter;
+    list<Container *>::iterator cont_iter;
+
+    // Tmp variable
+    Item * it_tmp;
+    Item * return_item;
+    Container * cont_tmp;
+
+    // Search item under room
+    for (iter = item_list.begin(); iter != item_list.end(); iter++){
+
+        it_tmp = (Item *) *iter;
+
+        if( it_tmp->getName() == item_name){
+            // tmp variable
+            return_item = *iter;
+            // item_list.erase(iter);
+            return return_item;
+        }
+    }
+
+    // Search item under every container
+    for (cont_iter = container_list.begin(); cont_iter != container_list.end(); cont_iter++){
+
+        cont_tmp = (Container *) *cont_iter;
+
+        // if( cont_tmp->getStatus() == "locked" || cont_tmp->getStatus() == "unopened"){
+        //     continue;
+        // }
+        for (iter = cont_tmp->get_item_list_ptr()->begin(); iter != cont_tmp->get_item_list_ptr()->end(); iter++){
+
+            it_tmp = (Item *) *iter;
+
+            if( it_tmp->getName() == item_name){
+                // tmp variable
+                return_item = *iter;
+
+                // cont_tmp->get_item_list_ptr()->erase(iter);
+
+                return return_item;
+            }
+        }
+    }
+
+    return NULL;
+}
+
+
 // Returen lists pointer
 list<Container *> * Room::return_container_list(){
     return &container_list;
@@ -276,7 +327,7 @@ Trigger * Room::room_check_trigger(string command, list<Item*>* inventory, list<
                         item_tmp = (Item *) * iter_it;
                         if(item_tmp->getName() == object){
 
-                            cout << "Find object: " << item_tmp->getName()<< endl;
+                            // cout << "Find object: " << item_tmp->getName()<< endl;
 
                             if(condition_tmp->getHas() == "yes"){
                                 // If the trigger has right type,  single, permenent
@@ -367,7 +418,7 @@ Trigger * Room::room_check_trigger(string command, list<Item*>* inventory, list<
             // Check the status of a specific container or item in the room
             else{
 
-                cout << "xxxxxxxxxxxxxxxxxxxxxxxxxx" << endl;
+                // cout << "xxxxxxxxxxxxxxxxxxxxxxxxxx" << endl;
 
                 object_status = condition_tmp->getStatus();
 

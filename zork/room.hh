@@ -61,6 +61,8 @@ public:
     Container * search_container(string cont_name);
     Creature * search_creature(string cr_name);
 
+    Item * search_item(string item_name);
+
     // return list pointers
     list<Container *> * return_container_list();
     list<Item *> * return_item_list();
