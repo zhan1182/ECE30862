@@ -11,7 +11,8 @@
 #include "item.hh"
 using namespace std;
 using namespace rapidxml;
-bool victory = false;
+
+bool victory = true;
 
 Condition* addCondition(const xml_node<char>* condition_node);
 
@@ -755,7 +756,10 @@ void parse_command(string command_str, list<Room*>* room_list, Room** currRoom,
 }
 
 Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory, xml_node<char>* root_node){
-    cout << currRoom->getDes() << endl;
+    if(currRoom != NULL){
+        cout << currRoom->getDes() << endl;
+    }
+    
     char input[256];
 
     Trigger * trigger_tmp;
@@ -790,11 +794,13 @@ Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory, 
 
         parse_command(input_str, room_list, &currRoom, inventory, root_node);
     }
-    if(victory)
+    if(victory){
         cout << "Victory!" << endl;
-    else
+    }
+    else{
         cout << "Game Over" << endl;
-
+    }
+    return NULL;
 }
 
 
