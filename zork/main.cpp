@@ -642,7 +642,10 @@ Base* find_base_in_room(Room* room, const string item_name){
 
     base = (Base*) room->search_creature(item_name);
     if(base != NULL)
-        return base; 
+        return base;
+    base = (Base*) room->search_container(item_name);
+    if(base != NULL)
+        return base;
     return NULL;
     
     
