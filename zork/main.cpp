@@ -648,9 +648,7 @@ Base* find_base_in_room(Room* room, const string item_name){
     
 }
 Base* find_base(list<Room*>* room_list, list<Item*>* inventory, const string item_name){
-    Base* base = (Base*) search_inventory(inventory, item_name);
-    if(base != NULL)
-        return base;
+    Base* base = NULL;
     list<Room*>::iterator iter = room_list->begin();
     while(iter != room_list->end()){
         Room* room_tmp = (Room*) *iter;
@@ -659,6 +657,10 @@ Base* find_base(list<Room*>* room_list, list<Item*>* inventory, const string ite
             return base;
         iter++;
     }
+    base = (Base*) search_inventory(inventory, item_name);
+    if(base != NULL)
+        return base;
+    
     return NULL;
 }
 
