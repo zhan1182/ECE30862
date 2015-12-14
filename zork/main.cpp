@@ -11,7 +11,7 @@
 #include "item.hh"
 using namespace std;
 using namespace rapidxml;
-
+bool victory = false;
 
 Condition* addCondition(const xml_node<char>* condition_node);
 
@@ -515,16 +515,15 @@ void read_eval(const string item_name, list<Item*>* inventory){
 }
 
 void turnon_eval(const string item_name, list<Room*>* room_list, Room** currRoom, list<Item*>* inventory, xml_node<char>* root_node){
-    cout << "You activate the "+item_name+"." << endl;
     Item* item = search_inventory(inventory, item_name);
     if(!item){
-        cout << "Error. Not found in inventory." << endl;
         return;
     }
     if(!item->get_turnon()){
         cout << "Error! Item does not have turnon." << endl;
         return;
     }
+    cout << "You activate the "+item_name+"." << endl;
     cout << item->get_turnon()->getToString() << endl;
     if(item->get_turnon()->getAction().compare(""))        
         parse_command(item->get_turnon()->getAction(), room_list, currRoom, inventory, root_node);
@@ -721,8 +720,10 @@ void parse_command(string command_str, list<Room*>* room_list, Room** currRoom,
     }else if(!command_str.compare("i")){
         print_inventory(inventory);
     }else if(!command_str.compare("open exit")){
-        if(!(*currRoom)->getType().compare("exit"))
+        if(!(*currRoom)->getType().compare("exit")){
             *currRoom = NULL;
+            victory = false;
+        }
         else
             cout << "Cannot Exit!" << endl;
     }else if(!command_str.substr(0,7).compare("turn on")){
@@ -758,7 +759,7 @@ Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory, 
     char input[256];
 
     Trigger * trigger_tmp;
-
+   
     while(currRoom){
         Room* nextRoom;
         cin.getline(input, 255);
@@ -785,10 +786,15 @@ Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory, 
                 continue;
             }
         }
-
+        
 
         parse_command(input_str, room_list, &currRoom, inventory, root_node);
     }
+    if(victory)
+        cout << "Victory!" << endl;
+    else
+        cout << "Game Over" << endl;
+
 }
 
 
@@ -819,7 +825,6 @@ int main(int argc, char ** argv)
         Room* nextRoom = enterRoom(&room_list, currRoom, &inventory, doc.first_node()->first_node());
         currRoom = nextRoom;
     }
-    cout << "Game Over" << endl;
     return EXIT_SUCCESS;
 }
 
