@@ -186,10 +186,17 @@ Container * Room::search_container(string cont_name){
 
 Creature * Room::search_creature(string cr_name){
     list<Creature*>::iterator iter;
+
+    Creature * return_creature;
+
+    // cout << "Size: " << creature_list.size() << endl;
+    // iter = creature_list.begin();    
+
     for (iter = creature_list.begin(); iter != creature_list.end(); iter++){
-        if( ((Creature *) *iter)->getName() == cr_name){
-            // tmp variable
-            Creature * return_creature = *iter;
+
+        return_creature = (Creature *) *iter;
+
+        if( return_creature->getName() == cr_name){
             return return_creature;
         }
     }

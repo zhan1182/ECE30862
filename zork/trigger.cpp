@@ -50,14 +50,4 @@ list<string> * Trigger::get_action_list_ptr(){
 	return &action_list;
 }
 
-
-        // cout << "Trigger number: " << currRoom->return_trigger_list()->size() << endl;
-
-        // // Check if a trigger happens
-        // trigger_tmp = currRoom->room_check_trigger(input_str, inventory, currRoom->return_container_list(), currRoom->return_item_list());
-        // if(trigger_tmp == NULL){
-        // 	cout << "NULL !!!!!!!!!!!!!!" << endl;
-        // }
-        // else{
-        // 	cout << trigger_tmp->getPrint_Message() << endl;
-        // }
+// cout << "Trigger number: " << currRoom->return_trigger_list()->size()<< endl;

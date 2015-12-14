@@ -315,6 +315,7 @@ Room* addRoom(const xml_node<char>* node, const xml_node<char>* root_node){
         string creature_name = creature_name_node->value();
         Creature * new_creature = addCreature(breadth_search("creature", creature_name, 
                                                              root_node->first_node("creature")), new_room);
+        // cout << "Creature name second: " << new_creature->getName() << " to room: " << new_room->getName() << endl;
         new_room->add_creature(new_creature);
         creature_name_node = creature_name_node->next_sibling("creature");
     }
@@ -428,8 +429,13 @@ void attack_eval(const string command, list<Room*>* room_list, Room** currRoom,
         cout << "Error. Unknow attack command" << endl;
     }
     Item* item = search_inventory(inventory, item_str);
-    if(!item)
+    if(!item){
         return;
+    }
+
+    // cout << "Creature name: " << creature_str << endl;
+    // cout << "Size: " << (*currRoom)->
+
     Creature* creature = (*currRoom)->search_creature(creature_str);
     if(!creature){
         cout << "Error. Unknown creature." << endl;
@@ -587,6 +593,9 @@ void add_eval(string command, list<Room*>* room_list, xml_node<char>* root_node,
                     room_tmp = (Room *) *iter;
                     if(room_tmp->getName() == room_name){
                         // Add the creature here
+
+                        // cout << "Creature name first: " << creature_tmp->getName() << endl;
+
                         room_tmp->add_creature(creature_tmp);
                     }
                 }
@@ -663,7 +672,7 @@ void update_eval(const string command, list<Room*>* room_list, list<Item*>* inve
         return;
     }
     base->changeStatus(status);
-    cout << item +"updated to "+status << endl;
+    // cout << item +" updated to "+status << endl;
     
 }
 
@@ -755,11 +764,13 @@ Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory, 
         cin.getline(input, 255);
         string input_str(input);
 
+        // cout << "Trigger number: " << currRoom->return_trigger_list()->size()<< endl;
+
         // Check if a trigger happens
         trigger_tmp = currRoom->room_check_trigger(input_str, inventory, currRoom->return_container_list(),
                                                    currRoom->return_item_list());
         if(trigger_tmp == NULL){
-            cout << "NULL !!!!!!!!!!!!!!" << endl;
+            // cout << "NULL !!!!!!!!!!!!!!" << endl;
         }
         else{
             cout << trigger_tmp->getPrint_Message() << endl;
@@ -769,6 +780,9 @@ Room* enterRoom(list<Room*>* room_list, Room* currRoom, list<Item*>* inventory, 
                 string command = (string) *iter;
                 parse_command(command, room_list, &currRoom, inventory, root_node);
                 iter++;
+            }
+            if(trigger_tmp->getCommand() != ""){
+                continue;
             }
         }
 

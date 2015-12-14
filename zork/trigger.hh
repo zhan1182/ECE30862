@@ -38,8 +38,8 @@ public:
 	void add_action(string Action);
 	void add_condition(Condition * cdt_ptr);
 
-	// Check condition
-	// bool trigger_check_condition();
+	// Get action
+	// string get_action();
 
 };
 
