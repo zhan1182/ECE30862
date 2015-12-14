@@ -545,7 +545,7 @@ string get_room_from_add(const string command){
 string get_object_from_add(const string command){
     int i;
     for(i = 0; i < command.size() - 1; ++i){
-        if(!command.substr(i, 2).compare("to")){
+        if(!command.substr(i, 3).compare("to ")){
             return command.substr(0, i - 1);
         }
     }
@@ -667,6 +667,8 @@ void update_eval(const string command, list<Room*>* room_list, list<Item*>* inve
     string status = get_room_from_add(command);
     Base* base = find_base(room_list, inventory, item);
     
+    // cout << "Command: " << command << endl;
+
     if(base == NULL){
         cout << "Error, "+item+" not found" << endl;
         return;
